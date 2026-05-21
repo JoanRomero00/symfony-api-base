@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ absolute_url(asset('css/reportes.css')) }}">
+    {% block stylesheets %}
+
+    {% endblock %}
+  </head>
+  <body class="pdfList true-type">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="text-center">{% block titulo %}Sistema de Habilitación{% endblock %}</h1>
+          <h2 class="text-center">{% block subtitulo %}{% endblock %}</h2>
+          <h3>{% block copete1 %}{% endblock %}</h3>
+          <h3>{% block copete2 %}{% endblock %}</h3>
+          {% block contenido %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

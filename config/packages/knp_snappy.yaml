@@ -1,0 +1,34 @@
+knp_snappy:
+    process_timeout: 600 # se setea un process timeout alto, sobre todo para los informes de auditoria
+    pdf:
+        enabled:    true
+        binary:     '%env(WKHTMLTOPDF_PATH)%'   
+        options:    
+            enable-local-file-access: true
+            page-size: LEGAL
+            margin-top: 30
+            margin-bottom: 15
+            margin-right: 5
+            margin-left: 5
+            header-line: true
+            header-spacing: 5
+            header-font-name: 'Courier New'
+            header-right: '%env(APP_NAME)%'
+            header-center: ''
+            header-html: '%kernel.project_dir%/public/build/static/headerPDFList.html'
+            header-font-size: 8
+            footer-font-name: 'Courier New'
+            footer-line: true
+            footer-spacing: 2
+            footer-left: 'EMITIDO EL [date] [time]'
+            footer-right: '[page]/[toPage]'
+            footer-font-size: 8
+            encoding: 'UTF-8'
+    image:
+        enabled:    true
+        binary:     '%env(WKHTMLTOIMAGE_PATH)%'
+        options:   
+            enable-local-file-access: true
+            encoding: 'UTF-8'
+
+

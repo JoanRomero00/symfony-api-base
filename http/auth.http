@@ -1,0 +1,43 @@
+@USER_ID=1
+@TOKEN=
+
+################################
+# AUTH
+################################
+
+### LOGIN
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+  "username": "superadmin",
+  "password": "changeme"
+}
+###
+
+### IMPERSONAR USUARIO
+POST http://localhost:8000/api/impersonacion/iniciar/{{USER_ID}}
+Authorization: Bearer {{TOKEN}}
+###
+
+### SALIR DE IMPERSONACIÓN
+POST http://localhost:8000/api/impersonacion/finalizar
+Authorization: Bearer {{TOKEN}}
+###
+
+### RESTABLECER CLAVE (ADMIN)
+PATCH http://localhost:8000/api/usuarios/{{USER_ID}}/restablecer-clave
+Authorization: Bearer {{TOKEN}}
+###
+
+### CAMBIAR CLAVE (USUARIO PROPIO)
+POST http://localhost:8000/api/usuarios/cambiar-clave
+Authorization: Bearer {{TOKEN}}
+Accept: application/json
+
+{
+  "oldPassword": "xxxxxxxx",
+  "newPassword": "yyyyyyyy",
+  "confirmPassword": "yyyyyyyy"
+}
+###

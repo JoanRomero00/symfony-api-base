@@ -1,0 +1,13 @@
+twig:
+    file_name_pattern: '*.twig'
+    default_path: '%kernel.project_dir%/templates'
+    form_themes: 
+        - 'bootstrap_5_layout.html.twig'
+    # Register your global variables under the globals key:
+    globals:
+        # Obtain it from the .env file:
+        app_titulo_sistema: 'Sistema de Cursos CCJ'
+
+when@test:
+    twig:
+        strict_variables: true

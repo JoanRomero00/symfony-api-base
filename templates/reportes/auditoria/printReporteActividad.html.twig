@@ -1,0 +1,71 @@
+{% extends 'reportes/basePdfListTrueType.html.twig' %}
+{% block body %}
+  {% block subtitulo %}{{ subtitulo }}{% endblock %}
+  {% block copete2 %}<center>{{ copete2 }}</center>{% endblock %}
+  {% block contenido %}
+    <br>
+    <h2 class="mt-3">Entidades Principales</h2>
+    <table class="table table-striped">
+      <thead class="table-primary">
+        <tr>
+          <th class="text">Entidad</th>
+          <th class="text-end">Altas</th>
+          <th class="text-end">Modificaciones</th>
+          <th class="text-end">Bajas</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set inserts, updates, deletes = 0, 0, 0 %}
+        {% for entidad in activity %}
+          {% if entidad.principal and (entidad.insert or entidad.update or entidad.delete) %}
+            {% set inserts, updates, deletes = inserts + entidad.insert, updates + entidad.update, deletes + entidad.delete %}
+            <tr class="no-gutters">
+              <td class="text">{{ entidad.audit_table }}</td>
+              <td class="text-end">{{ entidad.insert }}</td>
+              <td class="text-end">{{ entidad.update }}</td>
+              <td class="text-end">{{ entidad.delete }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+        <tfoot class="table-primary">
+          <th class="text-center">Totales</th>
+          <th class="text-end">{{ inserts }}</th>
+          <th class="text-end">{{ updates }}</th>
+          <th class="text-end">{{ deletes }}</th>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="mt-5">Otras Entidades de Datos</h2>
+    <table class="table table-striped mt-3">
+      <thead class="table-primary">
+        <tr>
+          <th class="text">Entidad</th>
+          <th class="text-end">Altas</th>
+          <th class="text-end">Modificaciones</th>
+          <th class="text-end">Bajas</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set inserts, updates, deletes = 0, 0, 0 %}
+        {% for entidad in activity %}
+          {% if not entidad.principal and (entidad.insert or entidad.update or entidad.delete) %}
+            {% set inserts, updates, deletes = inserts + entidad.insert, updates + entidad.update, deletes + entidad.delete %}
+            <tr class="no-gutters">
+              <td class="text">{{ entidad.audit_table }}</td>
+              <td class="text-end">{{ entidad.insert }}</td>
+              <td class="text-end">{{ entidad.update }}</td>
+              <td class="text-end">{{ entidad.delete }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+        <tfoot class="table-primary">
+          <th class="text-center">Totales</th>
+          <th class="text-end">{{ inserts }}</th>
+          <th class="text-end">{{ updates }}</th>
+          <th class="text-end">{{ deletes }}</th>
+        </tr>
+      </tbody>
+    </table>
+  {% endblock %}
+{% endblock %}

@@ -1,0 +1,61 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    ## Aqui se incorporan las constantes propias del Sistema ##
+
+    # AUDITORIA (Si se utiliza 'audit_entity_list' o viceversa)
+    app.audit_entity_list: []
+    app.audit_all_entities_except: []
+    app.audit_shemma_audit_name: "%env(AUDIT_SCHEMA_NAME)%"
+    app.audit_shemma_data_name: "public"
+    app.audit_name_suffix: "_audit"
+    # Tablas principales para informe de actividad (completar con las entidades del dominio)
+    app.audit.tablas_principales: []
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: "../src/"
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,OpenApi/CustomOpenApiFactory.php}"
+
+        # add more service definitions when explicit configuration is needed
+        # please note that last definitions always *replace* previous ones
+
+    # Inyecta 'iri' en todo objeto ApiResource durante la normalización (prioridad entre PaginationNormalizer y ItemNormalizer):
+    App\Serializer\IriNormalizer:
+        tags:
+            - { name: "serializer.normalizer", priority: -800 }
+
+    # Servicio normalizador: modifica la estructura de las colecciones paginadas (establecemos prioridad por sobre los normalizadores por defecto):
+    App\Serializer\PaginationNormalizer:
+        tags:
+            - { name: "serializer.normalizer", priority: 64 }
+
+# Servicio decorador: ajusta la documentación OpenAPI para reflejar la estructura personalizada por PaginationNormalizer.
+# Solo se registra en dev/test porque en prod la documentación de API Platform está deshabilitada
+# (ver config/packages/api_platform.yaml: enable_swagger/enable_docs = false), por lo que el servicio
+# decorado `api_platform.openapi.factory` no existe.
+when@dev:
+    services:
+        App\OpenApi\CustomOpenApiFactory:
+            decorates: "api_platform.openapi.factory"
+            arguments:
+                $decorated: "@.inner"
+                $projectDir: "%kernel.project_dir%"
+
+when@test:
+    services:
+        App\OpenApi\CustomOpenApiFactory:
+            decorates: "api_platform.openapi.factory"
+            arguments:
+                $decorated: "@.inner"
+                $projectDir: "%kernel.project_dir%"

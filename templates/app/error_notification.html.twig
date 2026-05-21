@@ -1,0 +1,18 @@
+<h2>Se ha producido un error en el {{ nombreSistema }}</h2>
+
+<ul>
+    <li><strong>Código de Error:</strong> {{ errorCode }} - {{ statusText }}</li>
+    <li><strong>Usuario:</strong> {{ user.apellido }} {{ user.nombre }} ({{ user.username }})</li>
+    <li><strong>Dirección IP del Usuario:</strong> {{ clienteIp }}</li>
+    <li><strong>Archivo:</strong> {{ file }} - Línea N° {{ line }}</li>
+    <li><strong>Mensaje:</strong> {{ message }}</li>
+    <li><strong>Previo:</strong> {{ previus }}</li>
+</ul>
+
+<p><strong>Traza del Error:</strong></p>
+<p style="font-size: .9rem; margin-left:1rem; margin-right:1rem; line-height: .9rem; color: #A33">{{ traceMessage}}</p>
+
+<p>Atte.,</p>
+
+<p style="font-size: .rem; margin-left:2rem; line-height: .4rem;"><strong>Sec. de Informática</strong></p>
+<p style="font-size: .9rem;; margin-left:2rem; line-height: .4rem;"><strong>Poder Judicial de Santa Fe</strong></p>

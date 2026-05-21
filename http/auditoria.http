@@ -1,0 +1,54 @@
+@TOKEN=
+
+################################
+# AUDITORÍA – CONFIG
+################################
+
+### CONFIG AUDITORIA
+GET http://localhost:8000/api/auditoria/config
+Authorization: Bearer {{TOKEN}}
+###
+
+### ACTIVAR TODAS
+POST http://localhost:8000/api/auditoria/activar-todas
+Authorization: Bearer {{TOKEN}}
+###
+
+### ACTIVAR TABLA USUARIO
+POST http://localhost:8000/api/auditoria/usuario/activar
+Authorization: Bearer {{TOKEN}}
+###
+
+### PAUSAR TABLA TIPO CURSO
+POST http://localhost:8000/api/auditoria/tipo_curso/pausar
+Authorization: Bearer {{TOKEN}}
+###
+
+### REANUDAR TABLA TIPO CURSO
+POST http://localhost:8000/api/auditoria/tipo_curso/reanudar
+Authorization: Bearer {{TOKEN}}
+###
+
+### PAUSAR TODAS
+POST http://localhost:8000/api/auditoria/pausar-todas
+Authorization: Bearer {{TOKEN}}
+###
+
+### ELIMINAR TODAS
+POST http://localhost:8000/api/auditoria/eliminar-todas
+Authorization: Bearer {{TOKEN}}
+###
+
+################################
+# AUDITORÍA – REPORTES
+################################
+
+### REPORTE AUDITORIA
+GET http://localhost:8000/api/auditoria/reporte-auditoria?entidad=cargo&fechaDesde=2023-01-01&fechaHasta=2025-12-31
+Authorization: Bearer {{TOKEN}}
+###
+
+### INFORME ACTIVIDAD
+GET http://localhost:8000/api/auditoria/reporte-actividad?fechaDesde=2023-01-01&fechaHasta=2025-12-31
+Authorization: Bearer {{TOKEN}}
+###

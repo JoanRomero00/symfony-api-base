@@ -1,0 +1,37 @@
+framework:
+    messenger:
+        # Los mensajes que fallan definitivamente se mueven a este transporte en vez de perderse
+        failure_transport: failed
+
+        transports:
+            # Transporte principal para procesamiento asíncrono.
+            app_async:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    # Nombre de la cola en la tabla messenger_messages (por defecto sería "default")
+                    queue_name: app_async
+                    # Usa LISTEN/NOTIFY de PostgreSQL para recibir mensajes en tiempo real sin polling
+                    use_notify: true
+                    # Revisa mensajes retrasados cada 60 segundos
+                    check_delayed_interval: 60000
+                retry_strategy:
+                    # Reintenta hasta 3 veces si falla, duplicando el tiempo de espera entre reintentos
+                    max_retries: 3
+                    multiplier: 2
+            # Almacena mensajes fallidos en tabla Doctrine para inspección y reintento manual
+            failed:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    queue_name: app_failed
+
+        default_bus: messenger.bus.default
+
+        buses:
+            messenger.bus.default: []
+
+        # Mensajes que se procesan de forma asíncrona (no bloquean la request HTTP)
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: app_async
+            # Descomentar al instalar symfony/notifier
+            # Symfony\Component\Notifier\Message\ChatMessage: app_async
+            # Symfony\Component\Notifier\Message\SmsMessage: app_async

@@ -1,0 +1,49 @@
+{% extends 'reportes/basePdfListTrueType.html.twig' %}
+{% block body %}
+  {% block subtitulo %} {{ subtitulo }} {% endblock %}
+  {% block copete1 %} {{ copete1 }} {% endblock %}
+  {% block copete2 %} {{ copete2 }} {% endblock %}
+  {% block contenido %}
+  <div id="auditoria" class="reporte-vertical-item mt-2">
+    <table class="table table-sm table-striped">
+      <thead class="table-bordered">
+        <tr>
+          <th class="text-center">Fecha y hora</th>
+          <th class="text-center">Entidad</th>
+          <th class="text-end">ID registro entidad</th>
+          <th class="text-center apellido-nombre">Usuario</th>
+          <th class="text-center">Operación</th>
+          <th class="text-end">ID auditoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registro in auditoria %}
+            <tr class="no-gutters">
+              <td class="text-center">{{ registro.audit_timestamp | date("d/m/Y H:i:s") }}</td>
+              <td class="text-center">{{ registro.entidad }}</td>
+                <td class="text-end">{{ registro.audit_identity }}</td>
+                <td class="text-center apellido-nombre">{{ registro.username }} (Id {{ registro.audit_iduserapp }})</td>
+              <td class="text-center">{{ registro.audit_action }}</td>
+              <td class="text-end">{{ registro.id }}</td>
+            </tr>
+            {% if incluirModificaciones and registro.diferencias is defined and (registro.audit_action == "Modificación" or diffFull) %} 
+              <tr class="no-gutters">
+                <td colspan="6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  {% for key,value  in registro.diferencias %}
+                    <small><strong>{{key}}:</strong> {{value.left}} {% if registro.audit_action == "Modificación" %}<small>&rarr;</small>{% endif %} {{value.right}} {% if not loop.last %},{% endif %}</small>
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if auditoria | length > 0 and auditoria | length < auditoria.0.total_registros%}
+      <h4 class="total-reporte">Mostrando {{ auditoria | length }} registros de {{ auditoria.0.total_registros ?? auditoria | length }} </h4>
+    {% else %}
+      <h4 class="total-reporte">Mostrando {{ auditoria | length }} registros </h4>
+    {% endif %}
+
+  </div>
+  {% endblock %}
+{% endblock %}
