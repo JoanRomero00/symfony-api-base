@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ConfiguracionSistemaRepository::class)]
-#[ORM\Table(options: ['comment' => 'Informacion de variables de configuración del sistema.'])]
+#[ORM\Table(schema: EntitySchema::MAIN, options: ['comment' => 'Informacion de variables de configuración del sistema.'])]
 #[ApiResource(
     security: "is_granted('ROLE_SUPER_ADMIN')",
     operations: [

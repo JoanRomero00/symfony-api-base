@@ -17,7 +17,9 @@ class UsuarioTest extends AbstractApiTestCase
         /** @var Connection $conn */
         $conn = static::getContainer()->get('doctrine')->getConnection();
 
-        return (string) $conn->fetchOne('SELECT password FROM usuario WHERE username = ?', [$username]);
+        $schema = static::getContainer()->getParameter('app.audit_shemma_data_name') ?: 'public';
+
+        return (string) $conn->fetchOne("SELECT password FROM {$schema}.usuario WHERE username = ?", [$username]);
     }
 
     // --- Tests 401: requiere autenticación ---

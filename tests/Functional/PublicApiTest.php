@@ -6,7 +6,7 @@
 
 namespace App\Tests\Functional;
 
-class PublicApiTest extends \App\Tests\AbstractApiTestCase
+class PublicApiTest extends AbstractApiTestCase
 {
     private const API_KEY = 'test-api-key-123';
 

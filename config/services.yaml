@@ -10,7 +10,7 @@ parameters:
     app.audit_entity_list: []
     app.audit_all_entities_except: []
     app.audit_shemma_audit_name: "%env(AUDIT_SCHEMA_NAME)%"
-    app.audit_shemma_data_name: "public"
+    app.audit_shemma_data_name: "%env(APP_DB_SCHEMA)%"
     app.audit_name_suffix: "_audit"
     # Tablas principales para informe de actividad (completar con las entidades del dominio)
     app.audit.tablas_principales: []
@@ -53,6 +53,9 @@ when@dev:
                 $projectDir: "%kernel.project_dir%"
 
 when@test:
+    parameters:
+        app.audit_entity_list: "ConfiguracionSistema,Usuario"
+
     services:
         App\OpenApi\CustomOpenApiFactory:
             decorates: "api_platform.openapi.factory"

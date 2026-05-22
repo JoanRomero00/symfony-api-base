@@ -36,7 +36,7 @@ passthru('php bin/console doctrine:database:create --env=test --if-not-exists 2>
 // Crear extensiones PostgreSQL necesarias en la BD de test
 $testDsn = "pgsql:host={$host};port={$port};dbname={$dbName}";
 try {
-    $testPdo = new \PDO($testDsn, $user, $pass);
+    $testPdo = new \PDO($testDsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $testPdo->exec('CREATE EXTENSION IF NOT EXISTS unaccent');
 } catch (\PDOException) {
 }
@@ -47,16 +47,29 @@ passthru('php bin/console doctrine:schema:create --env=test 2>&1');
 $auditSchemaName = $_SERVER['AUDIT_SCHEMA_NAME'] ?? $_ENV['AUDIT_SCHEMA_NAME'] ?? 'app_audit_test';
 $auditSql = file_get_contents(dirname(__DIR__) . '/resources/creacion_esquema_auditoria.sql');
 $auditSql = str_replace('%%AUDIT_SCHEMA%%', $auditSchemaName, $auditSql);
-$auditSql = str_replace('AUTHORIZATION postgres', "AUTHORIZATION {$user}", $auditSql);
-$auditSql = str_replace('OWNER TO postgres', "OWNER TO {$user}", $auditSql);
+$auditSql = str_replace('AUTHORIZATION postgres', "AUTHORIZATION \"{$user}\"", $auditSql);
+$auditSql = str_replace('OWNER TO postgres', "OWNER TO \"{$user}\"", $auditSql);
+try {
+    $testPdo = $testPdo ?? new \PDO($testDsn, $user, $pass, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $testPdo->exec($auditSql);
+} catch (\PDOException $e) {
+    echo "Warning: creacion_esquema_auditoria failed: " . $e->getMessage() . "\n";
+}
+
+$jsonbDeltaSql = file_get_contents(dirname(__DIR__) . '/resources/funcion_jsonb_delta.sql');
+$jsonbDeltaSql = str_replace('%%AUDIT_SCHEMA%%', $auditSchemaName, $jsonbDeltaSql);
+try {
+    $testPdo->exec($jsonbDeltaSql);
+} catch (\PDOException $e) {
+    echo "Warning: funcion_jsonb_delta failed: " . $e->getMessage() . "\n";
+}
+
 $activateAllSql = file_get_contents(dirname(__DIR__) . '/resources/funcion_activy_all_tables.sql');
 $activateAllSql = str_replace('%%AUDIT_SCHEMA%%', $auditSchemaName, $activateAllSql);
 try {
-    $testPdo = $testPdo ?? new \PDO($testDsn, $user, $pass);
-    $testPdo->exec($auditSql);
     $testPdo->exec($activateAllSql);
 } catch (\PDOException $e) {
-    echo "Warning: audit schema setup failed: " . $e->getMessage() . "\n";
+    echo "Warning: funcion_activy_all_tables failed: " . $e->getMessage() . "\n";
 }
 
 passthru('php bin/console doctrine:fixtures:load --env=test --no-interaction 2>&1');

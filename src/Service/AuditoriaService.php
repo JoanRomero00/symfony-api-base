@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AuditoriaService
 {
-    private $entitiesAuditables;
+    private array $entitiesAuditables = [];
     private $entitiesList;
     private $schemaAuditName;   // Nombre del Esquema de Auditoría
     private $schemaDataName;    // Nombre del Esquema sobre que el se realiza la Auditoría
@@ -600,7 +600,7 @@ class AuditoriaService
     /**
      * Obtiene Lista de Entidades Auditables a partir de las definidas en el parámetro ENTIDADES_A_AUDITAR del archivo .env.
      */
-    public function getEntitiesAuditables(): ?array
+    public function getEntitiesAuditables(): array
     {
         return $this->entitiesAuditables;
     }

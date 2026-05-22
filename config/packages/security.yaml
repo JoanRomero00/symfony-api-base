@@ -40,6 +40,7 @@ security:
         public_api:
             pattern: ^/api/publica
             stateless: true
+            entry_point: App\Security\ApiKeyAuthenticator
             custom_authenticators:
                 - App\Security\ApiKeyAuthenticator
 

@@ -15,11 +15,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class ApiKeyAuthenticator extends AbstractAuthenticator
+class ApiKeyAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(
         #[Autowire('%env(PUBLIC_API_KEY)%')]
@@ -60,5 +61,10 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
             ['message' => strtr($exception->getMessageKey(), $exception->getMessageData())],
             Response::HTTP_UNAUTHORIZED
         );
+    }
+
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    {
+        return new JsonResponse(['message' => 'API Key requerida.'], Response::HTTP_UNAUTHORIZED);
     }
 }
