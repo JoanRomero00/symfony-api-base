@@ -121,9 +121,9 @@
         ],
         "php-cs-fixer-check": "php-cs-fixer check src",
         "php-cs-fixer-fix": "php-cs-fixer fix src",
-        "test": "php bin/phpunit --testdox",
-        "test:filter": "php bin/phpunit --filter",
-        "test:coverage": "php bin/phpunit --testdox --coverage-html var/coverage",
+        "test": "php vendor/bin/phpunit --testdox",
+        "test:filter": "php vendor/bin/phpunit --filter",
+        "test:coverage": "php vendor/bin/phpunit --testdox --coverage-html var/coverage",
         "test:endpoints": "symfony console app:test:endpoint-coverage"
     }
 }
