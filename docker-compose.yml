@@ -1,0 +1,36 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: symfony_api_db
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_api_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: pgsql://app:app@database:5432/app_db?serverVersion=16
+      APP_ENV: dev
+      APP_SECRET: 5b4c5c7d812480e64c39bbfe383ff9bb
+      JWT_PASSPHRASE: changeme
+      CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$$'
+      MAILER_DSN: 'null://null'
+      MAIL_FROM: 'info@miapp.com'
+      PATH_SISTEMA: '/var/www'
+
+volumes:
+  db_data:
