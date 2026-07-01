@@ -16,8 +16,14 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash \
 # Configurar directorio de trabajo
 WORKDIR /var/www
 
+# Copiar y configurar el script de entrada (Entrypoint)
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh
+
 # Exponer el puerto para el servidor de desarrollo de Symfony
 EXPOSE 8000
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Comando por defecto para iniciar el servidor de Symfony escuchando en todas las interfaces
 CMD ["symfony", "server:start", "--no-tls", "--port=8000", "--allow-all-ip"]
