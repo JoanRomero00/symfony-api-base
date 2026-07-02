@@ -3,7 +3,7 @@
     "info": {
         "title": "Symfony API Base",
         "description": "",
-        "version": "desconocida (tag de git no disponible)"
+        "version": "1.0.0-3-gd4ffe46"
     },
     "servers": [
         {
@@ -1326,6 +1326,978 @@
                 }
             }
         },
+        "/api/detalle_integracions": {
+            "get": {
+                "operationId": "api_detalle_integracions_get_collection",
+                "tags": [
+                    "DetalleIntegracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DetalleIntegracion collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/DetalleIntegracion"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of DetalleIntegracion resources.",
+                "description": "Retrieves the collection of DetalleIntegracion resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_detalle_integracions_post",
+                "tags": [
+                    "DetalleIntegracion"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "DetalleIntegracion resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DetalleIntegracion"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a DetalleIntegracion resource.",
+                "description": "Creates a DetalleIntegracion resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new DetalleIntegracion resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DetalleIntegracion"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/detalle_integracions/{id}": {
+            "get": {
+                "operationId": "api_detalle_integracions_id_get",
+                "tags": [
+                    "DetalleIntegracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DetalleIntegracion resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DetalleIntegracion"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a DetalleIntegracion resource.",
+                "description": "Retrieves a DetalleIntegracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "DetalleIntegracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_detalle_integracions_id_delete",
+                "tags": [
+                    "DetalleIntegracion"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "DetalleIntegracion resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the DetalleIntegracion resource.",
+                "description": "Removes the DetalleIntegracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "DetalleIntegracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_detalle_integracions_id_patch",
+                "tags": [
+                    "DetalleIntegracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DetalleIntegracion resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DetalleIntegracion"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the DetalleIntegracion resource.",
+                "description": "Updates the DetalleIntegracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "DetalleIntegracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated DetalleIntegracion resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DetalleIntegracion.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/expedientes": {
+            "get": {
+                "operationId": "api_expedientes_get_collection",
+                "tags": [
+                    "Expediente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expediente collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Expediente"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Expediente resources.",
+                "description": "Retrieves the collection of Expediente resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_expedientes_post",
+                "tags": [
+                    "Expediente"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Expediente resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Expediente"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Expediente resource.",
+                "description": "Creates a Expediente resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Expediente resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Expediente"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/expedientes/{id}": {
+            "get": {
+                "operationId": "api_expedientes_id_get",
+                "tags": [
+                    "Expediente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expediente resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Expediente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Expediente resource.",
+                "description": "Retrieves a Expediente resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Expediente identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_expedientes_id_delete",
+                "tags": [
+                    "Expediente"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Expediente resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Expediente resource.",
+                "description": "Removes the Expediente resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Expediente identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_expedientes_id_patch",
+                "tags": [
+                    "Expediente"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expediente resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Expediente"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Expediente resource.",
+                "description": "Updates the Expediente resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Expediente identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Expediente resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Expediente.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/fueros": {
+            "get": {
+                "operationId": "api_fueros_get_collection",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fuero collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Fuero"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Fuero resources.",
+                "description": "Retrieves the collection of Fuero resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_fueros_post",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Fuero resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Fuero"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Fuero resource.",
+                "description": "Creates a Fuero resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Fuero resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Fuero"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/fueros/{id}": {
+            "get": {
+                "operationId": "api_fueros_id_get",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fuero resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Fuero"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Fuero resource.",
+                "description": "Retrieves a Fuero resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Fuero identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_fueros_id_delete",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Fuero resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Fuero resource.",
+                "description": "Removes the Fuero resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Fuero identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_fueros_id_patch",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fuero resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Fuero"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Fuero resource.",
+                "description": "Updates the Fuero resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Fuero identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Fuero resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Fuero.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/api/impersonacion/finalizar": {
             "post": {
                 "operationId": "api_impersonacion_finalizar",
@@ -1467,6 +2439,654 @@
                 ]
             }
         },
+        "/api/integracions": {
+            "get": {
+                "operationId": "api_integracions_get_collection",
+                "tags": [
+                    "Integracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Integracion collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Integracion"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Integracion resources.",
+                "description": "Retrieves the collection of Integracion resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_integracions_post",
+                "tags": [
+                    "Integracion"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Integracion resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Integracion"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Integracion resource.",
+                "description": "Creates a Integracion resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Integracion resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Integracion"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/integracions/{id}": {
+            "get": {
+                "operationId": "api_integracions_id_get",
+                "tags": [
+                    "Integracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Integracion resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Integracion"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Integracion resource.",
+                "description": "Retrieves a Integracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Integracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_integracions_id_delete",
+                "tags": [
+                    "Integracion"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Integracion resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Integracion resource.",
+                "description": "Removes the Integracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Integracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_integracions_id_patch",
+                "tags": [
+                    "Integracion"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Integracion resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Integracion"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Integracion resource.",
+                "description": "Updates the Integracion resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Integracion identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Integracion resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Integracion.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/licencias": {
+            "get": {
+                "operationId": "api_licencias_get_collection",
+                "tags": [
+                    "Licencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Licencia collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Licencia"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Licencia resources.",
+                "description": "Retrieves the collection of Licencia resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_licencias_post",
+                "tags": [
+                    "Licencia"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Licencia resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Licencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Licencia resource.",
+                "description": "Creates a Licencia resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Licencia resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Licencia"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/licencias/{id}": {
+            "get": {
+                "operationId": "api_licencias_id_get",
+                "tags": [
+                    "Licencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Licencia resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Licencia"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Licencia resource.",
+                "description": "Retrieves a Licencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Licencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_licencias_id_delete",
+                "tags": [
+                    "Licencia"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Licencia resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Licencia resource.",
+                "description": "Removes the Licencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Licencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_licencias_id_patch",
+                "tags": [
+                    "Licencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Licencia resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Licencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Licencia resource.",
+                "description": "Updates the Licencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Licencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Licencia resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Licencia.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
         "/login": {
             "post": {
                 "operationId": "login_check_post",
@@ -1517,6 +3137,654 @@
                                     "username",
                                     "password"
                                 ]
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/presidencias": {
+            "get": {
+                "operationId": "api_presidencias_get_collection",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Presidencia collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Presidencia"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Presidencia resources.",
+                "description": "Retrieves the collection of Presidencia resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_presidencias_post",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Presidencia resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Presidencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Presidencia resource.",
+                "description": "Creates a Presidencia resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Presidencia resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Presidencia"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/presidencias/{id}": {
+            "get": {
+                "operationId": "api_presidencias_id_get",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Presidencia resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Presidencia"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Presidencia resource.",
+                "description": "Retrieves a Presidencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Presidencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_presidencias_id_delete",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Presidencia resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Presidencia resource.",
+                "description": "Removes the Presidencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Presidencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_presidencias_id_patch",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Presidencia resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Presidencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Presidencia resource.",
+                "description": "Updates the Presidencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Presidencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Presidencia resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Presidencia.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/tipo_marcas": {
+            "get": {
+                "operationId": "api_tipo_marcas_get_collection",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TipoMarca collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TipoMarca"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of TipoMarca resources.",
+                "description": "Retrieves the collection of TipoMarca resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_tipo_marcas_post",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "TipoMarca resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TipoMarca"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a TipoMarca resource.",
+                "description": "Creates a TipoMarca resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new TipoMarca resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TipoMarca"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/tipo_marcas/{id}": {
+            "get": {
+                "operationId": "api_tipo_marcas_id_get",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TipoMarca resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TipoMarca"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a TipoMarca resource.",
+                "description": "Retrieves a TipoMarca resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "TipoMarca identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_tipo_marcas_id_delete",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "TipoMarca resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the TipoMarca resource.",
+                "description": "Removes the TipoMarca resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "TipoMarca identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_tipo_marcas_id_patch",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TipoMarca resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TipoMarca"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the TipoMarca resource.",
+                "description": "Updates the TipoMarca resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "TipoMarca identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated TipoMarca resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TipoMarca.jsonMergePatch"
                             }
                         }
                     },
@@ -2276,6 +4544,330 @@
                     }
                 ]
             }
+        },
+        "/api/vocals": {
+            "get": {
+                "operationId": "api_vocals_get_collection",
+                "tags": [
+                    "Vocal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vocal collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Vocal"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "items"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Retrieves the collection of Vocal resources.",
+                "description": "Retrieves the collection of Vocal resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The collection page number",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 0,
+                            "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "api_vocals_post",
+                "tags": [
+                    "Vocal"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Vocal resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vocal"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Vocal resource.",
+                "description": "Creates a Vocal resource.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "The new Vocal resource",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Vocal"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/api/vocals/{id}": {
+            "get": {
+                "operationId": "api_vocals_id_get",
+                "tags": [
+                    "Vocal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vocal resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vocal"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Retrieves a Vocal resource.",
+                "description": "Retrieves a Vocal resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Vocal identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_vocals_id_delete",
+                "tags": [
+                    "Vocal"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Vocal resource deleted"
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Vocal resource.",
+                "description": "Removes the Vocal resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Vocal identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "patch": {
+                "operationId": "api_vocals_id_patch",
+                "tags": [
+                    "Vocal"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vocal resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vocal"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Vocal resource.",
+                "description": "Updates the Vocal resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Vocal identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated Vocal resource",
+                    "content": {
+                        "application/merge-patch+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Vocal.jsonMergePatch"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
         }
     },
     "components": {
@@ -2505,6 +5097,114 @@
                     }
                 }
             },
+            "DetalleIntegracion": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "canInt": {
+                        "type": "integer"
+                    },
+                    "motivo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "tipoMarca": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "integracion": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "vocal": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "DetalleIntegracion.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "canInt": {
+                        "type": "integer"
+                    },
+                    "motivo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "tipoMarca": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "integracion": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "vocal": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
             "Error": {
                 "type": "object",
                 "description": "A representation of common errors.",
@@ -2550,6 +5250,252 @@
                     }
                 }
             },
+            "Expediente": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "integracions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "NumExp": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "anio": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "cuij": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "caratula": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "nroExpCompleto": {
+                        "type": "string"
+                    },
+                    "numExp": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Expediente.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "integracions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "NumExp": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "anio": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "cuij": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "caratula": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "nroExpCompleto": {
+                        "type": "string"
+                    },
+                    "numExp": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Fuero": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "vocals": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "codFuero": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Fuero.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "vocals": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "codFuero": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
             "Impersonation.ImpersonationDto": {
                 "type": "object",
                 "properties": {
@@ -2557,6 +5503,661 @@
                         "type": "string"
                     }
                 }
+            },
+            "Integracion": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "fecha": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sala": {
+                        "type": "integer"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "observacion": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "expediente": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "nroIntegra": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "anioIntegra": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "fechaReintegro": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "mes": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocalSorteado": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Integracion.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "fecha": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "sala": {
+                        "type": "integer"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "observacion": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "expediente": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "nroIntegra": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "anioIntegra": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "fechaReintegro": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "mes": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocalSorteado": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Licencia": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "fechaDesde": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fechaHasta": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "motivo": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "vocal": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "motivo",
+                    "id"
+                ]
+            },
+            "Licencia.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "fechaDesde": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fechaHasta": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "motivo": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "vocal": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Presidencia": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "tribu": {
+                        "type": "string"
+                    },
+                    "cantSala": {
+                        "type": "integer"
+                    },
+                    "vocSala": {
+                        "type": "integer"
+                    },
+                    "cantSalaPro": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "fecInst": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "idInst": {
+                        "type": "integer"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "codOrg": {
+                        "type": "integer"
+                    },
+                    "licencia": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sortComun": {
+                        "type": "integer"
+                    },
+                    "sortAdHoc": {
+                        "type": "integer"
+                    },
+                    "sortCinco": {
+                        "type": "integer"
+                    },
+                    "sortComp": {
+                        "type": "integer"
+                    },
+                    "usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "integracions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "codFuero": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocals": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "vocOtroFuero": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "resta": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sorteoAleatorio": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "expedientes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Presidencia.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "tribu": {
+                        "type": "string"
+                    },
+                    "cantSala": {
+                        "type": "integer"
+                    },
+                    "vocSala": {
+                        "type": "integer"
+                    },
+                    "cantSalaPro": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "fecInst": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "idInst": {
+                        "type": "integer"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "codOrg": {
+                        "type": "integer"
+                    },
+                    "licencia": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sortComun": {
+                        "type": "integer"
+                    },
+                    "sortAdHoc": {
+                        "type": "integer"
+                    },
+                    "sortCinco": {
+                        "type": "integer"
+                    },
+                    "sortComp": {
+                        "type": "integer"
+                    },
+                    "usuarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "integracions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "codFuero": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocals": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "vocOtroFuero": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "resta": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "sorteoAleatorio": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "expedientes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "TipoMarca": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "letra": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "TipoMarca.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "descripcion": {
+                        "type": "string"
+                    },
+                    "letra": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
             },
             "Usuario": {
                 "type": "object",
@@ -2664,6 +6265,14 @@
                                 "null"
                             ]
                         }
+                    },
+                    "presidencia": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "userIdentifier": {
                         "readOnly": true,
@@ -2905,10 +6514,218 @@
                             ]
                         }
                     },
+                    "presidencia": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
                     "userIdentifier": {
                         "readOnly": true,
                         "description": "A visual identifier that represents this user.",
                         "type": "string"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Vocal": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "sala": {
+                        "type": "integer"
+                    },
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "integer"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "adHoc": {
+                        "type": "integer"
+                    },
+                    "orden": {
+                        "type": "integer"
+                    },
+                    "asigna": {
+                        "type": "integer"
+                    },
+                    "integra": {
+                        "type": "integer"
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "fecBaja": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "motBaja": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocPropio": {
+                        "type": "integer"
+                    },
+                    "licencias": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "fuero": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "Vocal.jsonMergePatch": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "sala": {
+                        "type": "integer"
+                    },
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "numero": {
+                        "type": "integer"
+                    },
+                    "estado": {
+                        "type": "string"
+                    },
+                    "adHoc": {
+                        "type": "integer"
+                    },
+                    "orden": {
+                        "type": "integer"
+                    },
+                    "asigna": {
+                        "type": "integer"
+                    },
+                    "integra": {
+                        "type": "integer"
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "fecBaja": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "motBaja": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "vocPropio": {
+                        "type": "integer"
+                    },
+                    "licencias": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "fuero": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "detallesIntegracion": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference",
+                            "example": "https://example.com/"
+                        }
+                    },
+                    "presidencia": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "storeId": {
+                        "type": "integer"
                     },
                     "iri": {
                         "type": "string",
@@ -3031,8 +6848,40 @@
             "description": "Resource 'ConfiguracionSistema' operations."
         },
         {
+            "name": "DetalleIntegracion",
+            "description": "Resource 'DetalleIntegracion' operations."
+        },
+        {
+            "name": "Expediente",
+            "description": "Resource 'Expediente' operations."
+        },
+        {
+            "name": "Fuero",
+            "description": "Resource 'Fuero' operations."
+        },
+        {
+            "name": "Integracion",
+            "description": "Resource 'Integracion' operations."
+        },
+        {
+            "name": "Licencia",
+            "description": "Resource 'Licencia' operations."
+        },
+        {
+            "name": "Presidencia",
+            "description": "Resource 'Presidencia' operations."
+        },
+        {
+            "name": "TipoMarca",
+            "description": "Resource 'TipoMarca' operations."
+        },
+        {
             "name": "Usuario",
             "description": "Resource 'Usuario' operations."
+        },
+        {
+            "name": "Vocal",
+            "description": "Resource 'Vocal' operations."
         }
     ],
     "webhooks": {}

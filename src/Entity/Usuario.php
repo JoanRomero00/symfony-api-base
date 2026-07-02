@@ -213,6 +213,10 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
     #[ORM\Column(nullable: true, options: ['comment' => 'Profile del usuario. Usado para guardar configuraciones propias del usuario.'])]
     private ?array $profile = null;
 
+    #[ORM\ManyToOne(targetEntity: Presidencia::class, inversedBy: 'usuarios')]
+    #[ORM\JoinColumn(name: 'presidencia_id', referencedColumnName: 'id', nullable: true)]
+    private ?Presidencia $presidencia = null;
+
     /**
      * Variable no mapeada. Usada para auditar al momento de borrar la entidad.
      */
@@ -453,6 +457,18 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
     public function setProfile(?array $profile): static
     {
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getPresidencia(): ?Presidencia
+    {
+        return $this->presidencia;
+    }
+
+    public function setPresidencia(?Presidencia $presidencia): static
+    {
+        $this->presidencia = $presidencia;
 
         return $this;
     }
