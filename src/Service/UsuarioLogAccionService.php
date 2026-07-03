@@ -54,6 +54,18 @@ class UsuarioLogAccionService
     }
 
     /**
+     * Audita logout con un usuario específico.
+     */
+    public function logOut(Usuario $usuario, string $clientIp): void
+    {
+        $this->auditar(
+            $usuario,
+            'Logout',
+            $clientIp,
+        );
+    }
+
+    /**
      * Audita inicio de suplantación para JWT (sin SwitchUserEvent).
      */
     public function impersonateIn(

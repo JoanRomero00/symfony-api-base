@@ -51,7 +51,7 @@ class Licencia
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function __construct()
@@ -62,6 +62,7 @@ class Licencia
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -81,7 +82,7 @@ class Licencia
 
         return $this;
     }
-    //###########################
+    // ###########################
 
     public function getId(): ?int
     {

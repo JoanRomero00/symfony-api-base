@@ -91,7 +91,7 @@ class Vocal
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function __construct()
@@ -108,6 +108,7 @@ class Vocal
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -127,7 +128,7 @@ class Vocal
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {
@@ -268,7 +269,7 @@ class Vocal
 
     public function getVocPropio(): ?bool
     {
-        return $this->vocPropio !== null ? (bool)$this->vocPropio : null;
+        return $this->vocPropio !== null ? (bool) $this->vocPropio : null;
     }
 
     public function setVocPropio(int $vocPropio): static

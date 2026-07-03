@@ -73,7 +73,7 @@ class Integracion
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function __construct()
@@ -85,6 +85,7 @@ class Integracion
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -104,7 +105,7 @@ class Integracion
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {
@@ -119,6 +120,7 @@ class Integracion
     public function setFecha(\DateTimeInterface $fecha): static
     {
         $this->fecha = $fecha;
+
         return $this;
     }
 
@@ -130,6 +132,7 @@ class Integracion
     public function setSala(int $sala): static
     {
         $this->sala = $sala;
+
         return $this;
     }
 
@@ -141,6 +144,7 @@ class Integracion
     public function setTipo(string $tipo): static
     {
         $this->tipo = $tipo;
+
         return $this;
     }
 
@@ -152,6 +156,7 @@ class Integracion
     public function setObservacion(?string $observacion): static
     {
         $this->observacion = $observacion;
+
         return $this;
     }
 
@@ -163,6 +168,7 @@ class Integracion
     public function setEstado(string $estado): static
     {
         $this->estado = $estado;
+
         return $this;
     }
 
@@ -228,6 +234,7 @@ class Integracion
     public function setNroIntegra(?int $nroIntegra): static
     {
         $this->nroIntegra = $nroIntegra;
+
         return $this;
     }
 
@@ -239,6 +246,7 @@ class Integracion
     public function setAnioIntegra(?int $anioIntegra): static
     {
         $this->anioIntegra = $anioIntegra;
+
         return $this;
     }
 
@@ -259,7 +267,8 @@ class Integracion
         if ($this->nroIntegra === null || $this->anioIntegra === null) {
             return null;
         }
-        return str_pad((string)$this->nroIntegra, 4, '0', STR_PAD_LEFT) . '/' . $this->anioIntegra;
+
+        return str_pad((string) $this->nroIntegra, 4, '0', STR_PAD_LEFT).'/'.$this->anioIntegra;
     }
 
     public function getMes(): ?string
@@ -283,6 +292,7 @@ class Integracion
         ];
 
         $numeroMes = (int) $this->fecha->format('n');
+
         return $meses[$numeroMes] ?? null;
     }
 
@@ -295,6 +305,7 @@ class Integracion
                 $vocal[] = $detalle->getVocal();
             }
         }
+
         return $vocal;
     }
 }

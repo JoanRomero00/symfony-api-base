@@ -35,7 +35,7 @@ class TipoMarca
     private ?string $descripcion = null;
 
     #[ORM\Column(length: 1, nullable: true)]
-    private ?string $letra = null;    
+    private ?string $letra = null;
 
     /**
      * @var Collection<int, DetalleIntegracion>
@@ -49,7 +49,7 @@ class TipoMarca
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function __construct()
@@ -61,6 +61,7 @@ class TipoMarca
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -80,7 +81,7 @@ class TipoMarca
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {

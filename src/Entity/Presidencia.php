@@ -98,7 +98,7 @@ class Presidencia
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     #[ORM\Column(nullable: true)]
@@ -128,6 +128,7 @@ class Presidencia
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -147,7 +148,7 @@ class Presidencia
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {
@@ -264,7 +265,7 @@ class Presidencia
 
     public function getLicencia(): ?bool
     {
-        return $this->licencia !== null ? (bool)$this->licencia : null;
+        return $this->licencia !== null ? (bool) $this->licencia : null;
     }
 
     public function setLicencia(?int $licencia): static
@@ -276,7 +277,7 @@ class Presidencia
 
     public function getSortComun(): ?bool
     {
-        return $this->sortComun !== null ? (bool)$this->sortComun : null;
+        return $this->sortComun !== null ? (bool) $this->sortComun : null;
     }
 
     public function setSortComun(int $sortComun): static
@@ -288,7 +289,7 @@ class Presidencia
 
     public function getSortAdHoc(): ?bool
     {
-        return $this->sortAdHoc !== null ? (bool)$this->sortAdHoc : null;
+        return $this->sortAdHoc !== null ? (bool) $this->sortAdHoc : null;
     }
 
     public function setSortAdHoc(int $sortAdHoc): static
@@ -300,7 +301,7 @@ class Presidencia
 
     public function getSortCinco(): ?bool
     {
-        return $this->sortCinco !== null ? (bool)$this->sortCinco : null;
+        return $this->sortCinco !== null ? (bool) $this->sortCinco : null;
     }
 
     public function setSortCinco(int $sortCinco): static
@@ -312,7 +313,7 @@ class Presidencia
 
     public function getSortComp(): ?bool
     {
-        return $this->sortComp !== null ? (bool)$this->sortComp : null;
+        return $this->sortComp !== null ? (bool) $this->sortComp : null;
     }
 
     public function setSortComp(int $sortComp): static
@@ -428,7 +429,7 @@ class Presidencia
 
     public function getResta(): ?bool
     {
-        return $this->resta !== null ? (bool)$this->resta : null;
+        return $this->resta !== null ? (bool) $this->resta : null;
     }
 
     public function setResta(int $resta): static
@@ -440,7 +441,7 @@ class Presidencia
 
     public function getVocOtroFuero(): ?bool
     {
-        return $this->vocOtroFuero !== null ? (bool)$this->vocOtroFuero : null;
+        return $this->vocOtroFuero !== null ? (bool) $this->vocOtroFuero : null;
     }
 
     public function setVocOtroFuero(int $vocOtroFuero): static
@@ -452,7 +453,7 @@ class Presidencia
 
     public function getSorteoAleatorio(): ?bool
     {
-        return $this->sorteoAleatorio !== null ? (bool)$this->sorteoAleatorio : null;
+        return $this->sorteoAleatorio !== null ? (bool) $this->sorteoAleatorio : null;
     }
 
     public function setSorteoAleatorio(?int $sorteoAleatorio): static

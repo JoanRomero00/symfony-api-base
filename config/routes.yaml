@@ -2,6 +2,10 @@ login:
     path: /login
     methods: ["POST"]
 
+logout:
+    path: /logout
+    methods: ["POST"]
+
 controllers:
     resource:
         path: ../src/Controller/

@@ -50,12 +50,13 @@ class DetalleIntegracion
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -75,7 +76,7 @@ class DetalleIntegracion
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {

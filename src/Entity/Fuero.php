@@ -49,7 +49,7 @@ class Fuero
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     public function __construct()
@@ -61,6 +61,7 @@ class Fuero
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -80,7 +81,7 @@ class Fuero
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {

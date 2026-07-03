@@ -58,7 +58,7 @@ class Expediente
     #[ORM\Column(nullable: true)]
     private ?int $lastUserAppId = null;
 
-    //############ PARA AUDITAR ############
+    // ############ PARA AUDITAR ############
     private ?int $storeId = null;
 
     private ?string $nroExpCompleto = null;
@@ -72,17 +72,19 @@ class Expediente
     public function setnroExpCompleto(string $nroExpCompleto): static
     {
         $this->nroExpCompleto = $nroExpCompleto;
+
         return $this;
     }
 
     public function getnroExpCompleto(): ?string
     {
-        return $this->NumExp ? ($this->NumExp . '/' . $this->anio) : null;
+        return $this->NumExp ? ($this->NumExp.'/'.$this->anio) : null;
     }
 
     public function setStoreId(int $storeId): static
     {
         $this->storeId = $storeId;
+
         return $this;
     }
 
@@ -102,7 +104,7 @@ class Expediente
 
         return $this;
     }
-    //########################### 
+    // ###########################
 
     public function getId(): ?int
     {
@@ -153,6 +155,7 @@ class Expediente
     public function setAnio(?int $anio): static
     {
         $this->anio = $anio;
+
         return $this;
     }
 
