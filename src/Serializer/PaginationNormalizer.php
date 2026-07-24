@@ -58,6 +58,12 @@ final class PaginationNormalizer implements NormalizerInterface, NormalizerAware
 
         return [
             'items' => $items,
+            'pagination' => [
+                'page' => $currentPage,
+                'limit' => $itemsPerPage,
+                'totalItems' => $totalItems,
+                'totalPages' => $totalPages,
+            ],
             'meta' => [
                 'totalItems' => $totalItems,
                 'itemCount' => count($items),

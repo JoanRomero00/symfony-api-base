@@ -43,11 +43,15 @@ class ResetPasswordProcessor implements ProcessorInterface
         $this->em->flush();
 
         // Enviar email al usuario con los datos
-        $this->usuarioService->sendEmailPassword(
+        $mailSent = $this->usuarioService->sendEmailPassword(
             $usuario->getEmail(),
             $usuario->getUserIdentifier(),
             $newPassword,
             'RESET'
+        );
+        $usuario->setMailDeliveryResult(
+            $mailSent,
+            $mailSent ? null : 'La contraseña fue restablecida, pero no se pudo enviar el correo al usuario.',
         );
 
         return $usuario;

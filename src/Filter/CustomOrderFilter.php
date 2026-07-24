@@ -27,8 +27,14 @@ final class CustomOrderFilter extends AbstractFilter
         }
 
         $alias = $queryBuilder->getRootAliases()[0];
+        $parameter = $operation?->getParameters()?->get('order');
+        $allowedProperties = $parameter?->getProperties() ?? [];
 
         foreach ($value as $orderProperty => $direction) {
+            if ([] !== $allowedProperties && !in_array($orderProperty, $allowedProperties, true)) {
+                continue;
+            }
+
             $direction = strtoupper((string) $direction);
             if (!in_array($direction, ['ASC', 'DESC'], true)) {
                 continue;

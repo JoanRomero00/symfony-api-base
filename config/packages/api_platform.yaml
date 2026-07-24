@@ -13,6 +13,7 @@ api_platform:
         pagination_items_per_page: 10
         # Paginación configurable por el cliente:
         pagination_client_items_per_page: true
+        pagination_items_per_page_parameter_name: limit
         pagination_maximum_items_per_page: 9999
     swagger:
         api_keys:

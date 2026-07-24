@@ -153,7 +153,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -967,7 +967,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -995,6 +995,18 @@
                     },
                     {
                         "name": "q",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "search",
                         "in": "query",
                         "description": "",
                         "required": false,
@@ -1379,7 +1391,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -1703,7 +1715,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -2008,6 +2020,22 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Retrieves the collection of Fuero resources.",
@@ -2027,7 +2055,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -2037,6 +2065,58 @@
                             "default": 10,
                             "minimum": 0,
                             "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Fuero order",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "description": "Fuero estado",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "A",
+                                "B"
+                            ]
                         },
                         "style": "form",
                         "explode": true
@@ -2091,6 +2171,22 @@
                             }
                         },
                         "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Creates a Fuero resource.",
@@ -2126,6 +2222,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -2145,49 +2257,6 @@
                 },
                 "summary": "Retrieves a Fuero resource.",
                 "description": "Retrieves a Fuero resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Fuero identifier",
-                        "required": true,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "simple",
-                        "explode": false
-                    }
-                ]
-            },
-            "delete": {
-                "operationId": "api_fueros_id_delete",
-                "tags": [
-                    "Fuero"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Fuero resource deleted"
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
-                    }
-                },
-                "summary": "Removes the Fuero resource.",
-                "description": "Removes the Fuero resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -2252,6 +2321,22 @@
                         },
                         "links": {}
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -2296,6 +2381,208 @@
                     },
                     "required": true
                 }
+            }
+        },
+        "/api/fueros/{id}/activate": {
+            "patch": {
+                "operationId": "api_fueros_idactivate_patch",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fuero resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Fuero"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Fuero resource.",
+                "description": "Updates the Fuero resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Fuero identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/fueros/{id}/deactivate": {
+            "patch": {
+                "operationId": "api_fueros_iddeactivate_patch",
+                "tags": [
+                    "Fuero"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fuero resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Fuero"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Fuero resource.",
+                "description": "Updates the Fuero resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Fuero identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
             }
         },
         "/api/impersonacion/finalizar": {
@@ -2492,7 +2779,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -2816,7 +3103,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -3178,6 +3465,22 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Retrieves the collection of Presidencia resources.",
@@ -3197,7 +3500,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -3207,6 +3510,58 @@
                             "default": 10,
                             "minimum": 0,
                             "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Presidencia order",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "description": "Presidencia estado",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "A",
+                                "B"
+                            ]
                         },
                         "style": "form",
                         "explode": true
@@ -3261,6 +3616,22 @@
                             }
                         },
                         "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Creates a Presidencia resource.",
@@ -3296,6 +3667,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -3315,49 +3702,6 @@
                 },
                 "summary": "Retrieves a Presidencia resource.",
                 "description": "Retrieves a Presidencia resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Presidencia identifier",
-                        "required": true,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "simple",
-                        "explode": false
-                    }
-                ]
-            },
-            "delete": {
-                "operationId": "api_presidencias_id_delete",
-                "tags": [
-                    "Presidencia"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Presidencia resource deleted"
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
-                    }
-                },
-                "summary": "Removes the Presidencia resource.",
-                "description": "Removes the Presidencia resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -3422,6 +3766,22 @@
                         },
                         "links": {}
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -3468,6 +3828,208 @@
                 }
             }
         },
+        "/api/presidencias/{id}/activate": {
+            "patch": {
+                "operationId": "api_presidencias_idactivate_patch",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Presidencia resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Presidencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Presidencia resource.",
+                "description": "Updates the Presidencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Presidencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/presidencias/{id}/deactivate": {
+            "patch": {
+                "operationId": "api_presidencias_iddeactivate_patch",
+                "tags": [
+                    "Presidencia"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Presidencia resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Presidencia"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the Presidencia resource.",
+                "description": "Updates the Presidencia resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Presidencia identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
         "/api/tipo_marcas": {
             "get": {
                 "operationId": "api_tipo_marcas_get_collection",
@@ -3502,6 +4064,22 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Retrieves the collection of TipoMarca resources.",
@@ -3521,7 +4099,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -3531,6 +4109,58 @@
                             "default": 10,
                             "minimum": 0,
                             "maximum": 9999
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "TipoMarca order",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "description": "TipoMarca estado",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "A",
+                                "B"
+                            ]
                         },
                         "style": "form",
                         "explode": true
@@ -3585,6 +4215,22 @@
                             }
                         },
                         "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Creates a TipoMarca resource.",
@@ -3620,6 +4266,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -3639,49 +4301,6 @@
                 },
                 "summary": "Retrieves a TipoMarca resource.",
                 "description": "Retrieves a TipoMarca resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "TipoMarca identifier",
-                        "required": true,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "simple",
-                        "explode": false
-                    }
-                ]
-            },
-            "delete": {
-                "operationId": "api_tipo_marcas_id_delete",
-                "tags": [
-                    "TipoMarca"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "TipoMarca resource deleted"
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
-                    }
-                },
-                "summary": "Removes the TipoMarca resource.",
-                "description": "Removes the TipoMarca resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -3746,6 +4365,22 @@
                         },
                         "links": {}
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
                     "404": {
                         "description": "Not found",
                         "content": {
@@ -3790,6 +4425,208 @@
                     },
                     "required": true
                 }
+            }
+        },
+        "/api/tipo_marcas/{id}/activate": {
+            "patch": {
+                "operationId": "api_tipo_marcas_idactivate_patch",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TipoMarca resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TipoMarca"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the TipoMarca resource.",
+                "description": "Updates the TipoMarca resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "TipoMarca identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            }
+        },
+        "/api/tipo_marcas/{id}/deactivate": {
+            "patch": {
+                "operationId": "api_tipo_marcas_iddeactivate_patch",
+                "tags": [
+                    "TipoMarca"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TipoMarca resource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TipoMarca"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Updates the TipoMarca resource.",
+                "description": "Updates the TipoMarca resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "TipoMarca identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
             }
         },
         "/api/usuarios": {
@@ -3861,7 +4698,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -3871,18 +4708,6 @@
                             "default": 10,
                             "minimum": 0,
                             "maximum": 9999
-                        },
-                        "style": "form",
-                        "explode": true
-                    },
-                    {
-                        "name": "order",
-                        "in": "query",
-                        "description": "Usuario order",
-                        "required": false,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "string"
                         },
                         "style": "form",
                         "explode": true
@@ -3900,13 +4725,94 @@
                         "explode": false
                     },
                     {
-                        "name": "soloActivos",
+                        "name": "search",
                         "in": "query",
-                        "description": "Si se env\u00eda con cualquier valor, devuelve solo los registros activos (sin fecha de baja).",
+                        "description": "",
                         "required": false,
                         "deprecated": false,
                         "schema": {
-                            "type": "boolean"
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "description": "Usuario estado",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "activos",
+                                "baja",
+                                "todos"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Usuario sort",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "username",
+                                "apellido",
+                                "nombre",
+                                "email",
+                                "presidencia",
+                                "fechaAlta",
+                                "fechaBaja",
+                                "ultimoAcceso",
+                                "cantidadAccesos"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "Usuario direction",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
                         },
                         "style": "form",
                         "explode": true
@@ -3924,7 +4830,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Usuario-usuario.read"
+                                    "$ref": "#/components/schemas/Usuario-usuario.read_usuario.mail"
                                 }
                             }
                         },
@@ -3987,7 +4893,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Usuario"
+                                "$ref": "#/components/schemas/Usuario.CreateUsuarioDto"
                             }
                         }
                     },
@@ -4071,6 +4977,71 @@
                 }
             }
         },
+        "/api/usuarios/force-2fa-all": {
+            "post": {
+                "operationId": "api_usuariosforce-2fa-all_post",
+                "tags": [
+                    "Usuario"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuario resource created",
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "422": {
+                        "description": "An error occurred",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Creates a Usuario resource.",
+                "description": "Creates a Usuario resource.",
+                "parameters": []
+            }
+        },
         "/api/usuarios/{id}": {
             "get": {
                 "operationId": "api_usuarios_id_get",
@@ -4123,6 +5094,65 @@
                 },
                 "summary": "Retrieves a Usuario resource.",
                 "description": "Retrieves a Usuario resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Usuario identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    }
+                ]
+            },
+            "delete": {
+                "operationId": "api_usuarios_id_delete",
+                "tags": [
+                    "Usuario"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuario resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Removes the Usuario resource.",
+                "description": "Removes the Usuario resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -4241,7 +5271,7 @@
                     "content": {
                         "application/merge-patch+json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Usuario.jsonMergePatch"
+                                "$ref": "#/components/schemas/Usuario.UpdateUsuarioDto.jsonMergePatch"
                             }
                         }
                     },
@@ -4249,19 +5279,19 @@
                 }
             }
         },
-        "/api/usuarios/{id}/dar-de-baja": {
-            "patch": {
-                "operationId": "api_usuarios_iddar-de-baja_patch",
+        "/api/usuarios/{id}/force-2fa": {
+            "post": {
+                "operationId": "api_usuarios_idforce-2fa_post",
                 "tags": [
                     "Usuario"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Usuario resource updated",
+                        "description": "Usuario resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Usuario"
+                                    "$ref": "#/components/schemas/Usuario-usuario.read"
                                 }
                             }
                         },
@@ -4314,26 +5344,10 @@
                             }
                         },
                         "links": {}
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
                     }
                 },
-                "summary": "Updates the Usuario resource.",
-                "description": "Updates the Usuario resource.",
+                "summary": "Creates a Usuario resource.",
+                "description": "Creates a Usuario resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -4351,18 +5365,18 @@
             }
         },
         "/api/usuarios/{id}/reactivar": {
-            "patch": {
-                "operationId": "api_usuarios_idreactivar_patch",
+            "post": {
+                "operationId": "api_usuarios_idreactivar_post",
                 "tags": [
                     "Usuario"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Usuario resource updated",
+                        "description": "Usuario resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Usuario"
+                                    "$ref": "#/components/schemas/Usuario-usuario.read"
                                 }
                             }
                         },
@@ -4415,26 +5429,10 @@
                             }
                         },
                         "links": {}
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
                     }
                 },
-                "summary": "Updates the Usuario resource.",
-                "description": "Updates the Usuario resource.",
+                "summary": "Creates a Usuario resource.",
+                "description": "Creates a Usuario resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -4451,15 +5449,22 @@
                 ]
             }
         },
-        "/api/usuarios/{id}/restablecer-clave": {
-            "patch": {
-                "operationId": "api_usuarios_idrestablecer-clave_patch",
+        "/api/usuarios/{id}/reset-password": {
+            "post": {
+                "operationId": "api_usuarios_idreset-password_post",
                 "tags": [
                     "Usuario"
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Usuario resource updated",
+                    "200": {
+                        "description": "Usuario resource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Usuario-usuario.read_usuario.mail"
+                                }
+                            }
+                        },
                         "links": {}
                     },
                     "400": {
@@ -4509,26 +5514,10 @@
                             }
                         },
                         "links": {}
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/problem+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        },
-                        "links": {}
                     }
                 },
-                "summary": "Updates the Usuario resource.",
-                "description": "Updates the Usuario resource.",
+                "summary": "Creates a Usuario resource.",
+                "description": "Creates a Usuario resource.",
                 "parameters": [
                     {
                         "name": "id",
@@ -4598,7 +5587,7 @@
                         "explode": true
                     },
                     {
-                        "name": "itemsPerPage",
+                        "name": "limit",
                         "in": "query",
                         "description": "The number of items per page",
                         "required": false,
@@ -5410,9 +6399,11 @@
                         "type": "integer"
                     },
                     "descripcion": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "vocals": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5421,22 +6412,26 @@
                         }
                     },
                     "codFuero": {
+                        "maxLength": 2,
                         "type": [
                             "string",
                             "null"
                         ]
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
-                    },
-                    "storeId": {
-                        "type": "integer"
                     },
                     "iri": {
                         "type": "string",
@@ -5446,6 +6441,8 @@
                     }
                 },
                 "required": [
+                    "descripcion",
+                    "codFuero",
                     "id"
                 ]
             },
@@ -5457,9 +6454,11 @@
                         "type": "integer"
                     },
                     "descripcion": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "vocals": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5468,22 +6467,26 @@
                         }
                     },
                     "codFuero": {
+                        "maxLength": 2,
                         "type": [
                             "string",
                             "null"
                         ]
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
-                    },
-                    "storeId": {
-                        "type": "integer"
                     },
                     "iri": {
                         "type": "string",
@@ -5807,15 +6810,22 @@
                         "type": "integer"
                     },
                     "tribu": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "cantSala": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": "integer"
                     },
                     "vocSala": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": "integer"
                     },
                     "cantSalaPro": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": [
                             "integer",
                             "null"
@@ -5826,36 +6836,74 @@
                         "format": "date-time"
                     },
                     "idInst": {
+                        "minimum": 0,
+                        "maximum": 999999999,
                         "type": "integer"
                     },
                     "email": {
+                        "format": "email",
+                        "maxLength": 40,
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
                         "type": "string"
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "codOrg": {
                         "type": "integer"
                     },
                     "licencia": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "sortComun": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortAdHoc": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortCinco": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortComp": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "usuarios": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5864,6 +6912,7 @@
                         }
                     },
                     "integracions": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5872,12 +6921,14 @@
                         }
                     },
                     "codFuero": {
+                        "maxLength": 2,
                         "type": [
                             "string",
                             "null"
                         ]
                     },
                     "vocals": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5886,33 +6937,47 @@
                         }
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
-                    "storeId": {
-                        "type": "integer"
-                    },
                     "vocOtroFuero": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "resta": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "sorteoAleatorio": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "expedientes": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5928,6 +6993,64 @@
                     }
                 },
                 "required": [
+                    "tribu",
+                    "cantSala",
+                    "vocSala",
+                    "cantSalaPro",
+                    "fecInst",
+                    "idInst",
+                    "codOrg",
+                    "sortComun",
+                    "sortAdHoc",
+                    "sortCinco",
+                    "sortComp",
+                    "codFuero",
+                    "id"
+                ]
+            },
+            "Presidencia-usuario.read": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "tribu": {
+                        "maxLength": 50,
+                        "type": "string"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "tribu",
+                    "id"
+                ]
+            },
+            "Presidencia-usuario.read_usuario.mail": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "tribu": {
+                        "maxLength": 50,
+                        "type": "string"
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "tribu",
                     "id"
                 ]
             },
@@ -5939,15 +7062,22 @@
                         "type": "integer"
                     },
                     "tribu": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "cantSala": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": "integer"
                     },
                     "vocSala": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": "integer"
                     },
                     "cantSalaPro": {
+                        "minimum": 0,
+                        "maximum": 99,
                         "type": [
                             "integer",
                             "null"
@@ -5958,36 +7088,74 @@
                         "format": "date-time"
                     },
                     "idInst": {
+                        "minimum": 0,
+                        "maximum": 999999999,
                         "type": "integer"
                     },
                     "email": {
+                        "format": "email",
+                        "maxLength": 40,
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
                         "type": "string"
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "codOrg": {
                         "type": "integer"
                     },
                     "licencia": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "sortComun": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortAdHoc": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortCinco": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "sortComp": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": "integer"
                     },
                     "usuarios": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -5996,6 +7164,7 @@
                         }
                     },
                     "integracions": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -6004,12 +7173,14 @@
                         }
                     },
                     "codFuero": {
+                        "maxLength": 2,
                         "type": [
                             "string",
                             "null"
                         ]
                     },
                     "vocals": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -6018,33 +7189,47 @@
                         }
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
-                    "storeId": {
-                        "type": "integer"
-                    },
                     "vocOtroFuero": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "resta": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "sorteoAleatorio": {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "default": 0,
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
                     "expedientes": {
+                        "readOnly": true,
                         "type": "array",
                         "items": {
                             "type": "string",
@@ -6071,9 +7256,12 @@
                         "type": "integer"
                     },
                     "descripcion": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "letra": {
+                        "minLength": 1,
+                        "maxLength": 1,
                         "type": [
                             "string",
                             "null"
@@ -6089,16 +7277,19 @@
                         }
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
-                    },
-                    "storeId": {
-                        "type": "integer"
                     },
                     "iri": {
                         "type": "string",
@@ -6108,6 +7299,8 @@
                     }
                 },
                 "required": [
+                    "descripcion",
+                    "letra",
                     "id"
                 ]
             },
@@ -6119,9 +7312,12 @@
                         "type": "integer"
                     },
                     "descripcion": {
+                        "maxLength": 50,
                         "type": "string"
                     },
                     "letra": {
+                        "minLength": 1,
+                        "maxLength": 1,
                         "type": [
                             "string",
                             "null"
@@ -6137,16 +7333,19 @@
                         }
                     },
                     "estado": {
+                        "enum": [
+                            "A",
+                            "B"
+                        ],
+                        "readOnly": true,
                         "type": "string"
                     },
                     "lastUserAppId": {
+                        "readOnly": true,
                         "type": [
                             "integer",
                             "null"
                         ]
-                    },
-                    "storeId": {
-                        "type": "integer"
                     },
                     "iri": {
                         "type": "string",
@@ -6156,144 +7355,6 @@
                     }
                 },
                 "required": [
-                    "id"
-                ]
-            },
-            "Usuario": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "readOnly": true,
-                        "type": "integer"
-                    },
-                    "username": {
-                        "minLength": 1,
-                        "maxLength": 180,
-                        "type": "string"
-                    },
-                    "roles": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "password": {
-                        "minLength": 1,
-                        "description": "Password hasheada",
-                        "type": "string"
-                    },
-                    "dni": {
-                        "minimum": 1,
-                        "maximum": 999999999,
-                        "type": [
-                            "integer",
-                            "null"
-                        ]
-                    },
-                    "apellido": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "type": "string"
-                    },
-                    "nombre": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "type": "string"
-                    },
-                    "email": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "format": "email",
-                        "externalDocs": {
-                            "url": "https://schema.org/email"
-                        },
-                        "type": "string"
-                    },
-                    "fechaAlta": {
-                        "readOnly": true,
-                        "description": "Evento lanzado antes de almacenamiento en BD por primera vez.",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "fechaBaja": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "ultimoAcceso": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "cantidadAccesos": {
-                        "type": [
-                            "integer",
-                            "null"
-                        ]
-                    },
-                    "lastUserAppId": {
-                        "type": [
-                            "integer",
-                            "null"
-                        ]
-                    },
-                    "authCode": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "trustedVersion": {
-                        "type": [
-                            "integer",
-                            "null"
-                        ]
-                    },
-                    "profile": {
-                        "type": [
-                            "array",
-                            "null"
-                        ],
-                        "items": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
-                    "presidencia": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "iri-reference",
-                        "example": "https://example.com/"
-                    },
-                    "userIdentifier": {
-                        "readOnly": true,
-                        "description": "A visual identifier that represents this user.",
-                        "type": "string"
-                    },
-                    "iri": {
-                        "type": "string",
-                        "format": "uri-reference",
-                        "readOnly": true,
-                        "example": "/api/recurso/1"
-                    }
-                },
-                "required": [
-                    "username",
-                    "roles",
-                    "password",
-                    "apellido",
-                    "nombre",
-                    "email",
-                    "fechaAlta",
                     "id"
                 ]
             },
@@ -6330,124 +7391,11 @@
                         "type": "string"
                     },
                     "nombre": {
-                        "minLength": 1,
                         "maxLength": 50,
-                        "type": "string"
-                    },
-                    "email": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "format": "email",
-                        "externalDocs": {
-                            "url": "https://schema.org/email"
-                        },
-                        "type": "string"
-                    },
-                    "fechaAlta": {
-                        "readOnly": true,
-                        "description": "Evento lanzado antes de almacenamiento en BD por primera vez.",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "fechaBaja": {
                         "type": [
                             "string",
                             "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "ultimoAcceso": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "date-time"
-                    },
-                    "cantidadAccesos": {
-                        "type": [
-                            "integer",
-                            "null"
                         ]
-                    },
-                    "iri": {
-                        "type": "string",
-                        "format": "uri-reference",
-                        "readOnly": true,
-                        "example": "/api/recurso/1"
-                    }
-                },
-                "required": [
-                    "username",
-                    "roles",
-                    "apellido",
-                    "nombre",
-                    "email",
-                    "fechaAlta",
-                    "id"
-                ]
-            },
-            "Usuario.ChangePasswordDto": {
-                "type": "object",
-                "required": [
-                    "oldPassword",
-                    "newPassword",
-                    "confirmPassword"
-                ],
-                "properties": {
-                    "oldPassword": {
-                        "type": "string"
-                    },
-                    "newPassword": {
-                        "minLength": 8,
-                        "maxLength": 100,
-                        "type": "string"
-                    },
-                    "confirmPassword": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Usuario.jsonMergePatch": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "readOnly": true,
-                        "type": "integer"
-                    },
-                    "username": {
-                        "minLength": 1,
-                        "maxLength": 180,
-                        "type": "string"
-                    },
-                    "roles": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "password": {
-                        "minLength": 1,
-                        "description": "Password hasheada",
-                        "type": "string"
-                    },
-                    "dni": {
-                        "minimum": 1,
-                        "maximum": 999999999,
-                        "type": [
-                            "integer",
-                            "null"
-                        ]
-                    },
-                    "apellido": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "type": "string"
-                    },
-                    "nombre": {
-                        "minLength": 1,
-                        "maxLength": 50,
-                        "type": "string"
                     },
                     "email": {
                         "minLength": 1,
@@ -6490,42 +7438,21 @@
                             "null"
                         ]
                     },
-                    "authCode": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
                     "trustedVersion": {
                         "type": [
                             "integer",
                             "null"
                         ]
                     },
-                    "profile": {
-                        "type": [
-                            "array",
-                            "null"
-                        ],
-                        "items": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
-                        }
-                    },
                     "presidencia": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "format": "iri-reference",
-                        "example": "https://example.com/"
-                    },
-                    "userIdentifier": {
-                        "readOnly": true,
-                        "description": "A visual identifier that represents this user.",
-                        "type": "string"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Presidencia-usuario.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "iri": {
                         "type": "string",
@@ -6535,8 +7462,277 @@
                     }
                 },
                 "required": [
+                    "username",
+                    "roles",
+                    "apellido",
+                    "email",
+                    "fechaAlta",
                     "id"
                 ]
+            },
+            "Usuario-usuario.read_usuario.mail": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "readOnly": true,
+                        "type": "integer"
+                    },
+                    "username": {
+                        "minLength": 1,
+                        "maxLength": 180,
+                        "type": "string"
+                    },
+                    "roles": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "dni": {
+                        "minimum": 1,
+                        "maximum": 999999999,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "apellido": {
+                        "minLength": 1,
+                        "maxLength": 50,
+                        "type": "string"
+                    },
+                    "nombre": {
+                        "maxLength": 50,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "email": {
+                        "minLength": 1,
+                        "maxLength": 50,
+                        "format": "email",
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
+                        "type": "string"
+                    },
+                    "fechaAlta": {
+                        "readOnly": true,
+                        "description": "Evento lanzado antes de almacenamiento en BD por primera vez.",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fechaBaja": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "ultimoAcceso": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "cantidadAccesos": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "lastUserAppId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "trustedVersion": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "presidencia": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Presidencia-usuario.read_usuario.mail"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "mailSent": {
+                        "readOnly": true,
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "warning": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "username",
+                    "roles",
+                    "apellido",
+                    "email",
+                    "fechaAlta",
+                    "id"
+                ]
+            },
+            "Usuario.ChangePasswordDto": {
+                "type": "object",
+                "required": [
+                    "oldPassword",
+                    "newPassword",
+                    "confirmPassword"
+                ],
+                "properties": {
+                    "oldPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "minLength": 8,
+                        "maxLength": 100,
+                        "type": "string"
+                    },
+                    "confirmPassword": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Usuario.CreateUsuarioDto": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "username",
+                    "apellido",
+                    "email",
+                    "roles"
+                ],
+                "properties": {
+                    "username": {
+                        "maxLength": 180,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "apellido": {
+                        "maxLength": 50,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "nombre": {
+                        "maxLength": 50,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "email": {
+                        "format": "email",
+                        "maxLength": 50,
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "presidenciaId": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "roles": {
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Usuario.UpdateUsuarioDto.jsonMergePatch": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "username": {
+                        "maxLength": 180,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "apellido": {
+                        "maxLength": 50,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "nombre": {
+                        "maxLength": 50,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "email": {
+                        "format": "email",
+                        "maxLength": 50,
+                        "externalDocs": {
+                            "url": "https://schema.org/email"
+                        },
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "presidenciaId": {
+                        "minimum": 0,
+                        "exclusiveMinimum": 0,
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "roles": {
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
             },
             "Vocal": {
                 "type": "object",
@@ -6800,9 +7996,39 @@
                     "last"
                 ]
             },
+            "PaginationSummary": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "example": 20
+                    },
+                    "totalItems": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "required": [
+                    "page",
+                    "limit",
+                    "totalItems",
+                    "totalPages"
+                ]
+            },
             "PaginatedResponse": {
                 "type": "object",
                 "properties": {
+                    "pagination": {
+                        "$ref": "#/components/schemas/PaginationSummary"
+                    },
                     "meta": {
                         "$ref": "#/components/schemas/PaginationMeta"
                     },
@@ -6811,6 +8037,7 @@
                     }
                 },
                 "required": [
+                    "pagination",
                     "meta",
                     "links"
                 ]

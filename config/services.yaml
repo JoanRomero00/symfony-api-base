@@ -7,7 +7,7 @@ parameters:
     ## Aqui se incorporan las constantes propias del Sistema ##
 
     # AUDITORIA (Si se utiliza 'audit_entity_list' o viceversa)
-    app.audit_entity_list: []
+    app.audit_entity_list: "Fuero,TipoMarca,Presidencia"
     app.audit_all_entities_except: []
     app.audit_shemma_audit_name: "%env(AUDIT_SCHEMA_NAME)%"
     app.audit_shemma_data_name: "%env(APP_DB_SCHEMA)%"
@@ -54,7 +54,7 @@ when@dev:
 
 when@test:
     parameters:
-        app.audit_entity_list: "ConfiguracionSistema,Usuario"
+        app.audit_entity_list: "ConfiguracionSistema,Usuario,Fuero,TipoMarca,Presidencia"
 
     services:
         App\OpenApi\CustomOpenApiFactory:

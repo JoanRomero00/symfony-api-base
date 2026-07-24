@@ -33,13 +33,12 @@ final class GlobalSearchFilter extends AbstractFilter
         ?Operation $operation = null,
         array $context = [],
     ): void {
-        // Solo se ejecuta si el parámetro es 'q' y tiene valor
-        if ('q' !== $property || empty($value) || null === $operation) {
+        // Admite 'q' (convención histórica) y 'search' (contratos REST nuevos).
+        if (!in_array($property, ['q', 'search'], true) || empty($value) || null === $operation) {
             return;
         }
 
-        // Obtener el QueryParameter 'q' definido en la entidad
-        $parameter = $operation->getParameters()?->get('q');
+        $parameter = $operation->getParameters()?->get($property);
         if (!$parameter) {
             return;
         }
@@ -126,6 +125,12 @@ final class GlobalSearchFilter extends AbstractFilter
         return [
             'q' => [
                 'property' => 'q',
+                'type' => 'string',
+                'required' => false,
+                'openapi' => ['description' => 'Búsqueda global en múltiples campos'],
+            ],
+            'search' => [
+                'property' => 'search',
                 'type' => 'string',
                 'required' => false,
                 'openapi' => ['description' => 'Búsqueda global en múltiples campos'],

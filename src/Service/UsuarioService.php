@@ -65,17 +65,18 @@ class UsuarioService
             $email = (new TemplatedEmail())
                 ->from($fromAdrress)
                 ->to($email)
-                ->subject('Poder Judicial Santa Fe - Sistema de Cursos CCJ')
+                ->subject('Poder Judicial Santa Fe - Sistema de Integraciones')
                 ->htmlTemplate($mailTemplate)
                 ->context([
                     'expiration_date' => new \DateTime('+7 days'),
                     'usuario' => $usuario,
                     'password' => $password,
+                    'action' => $action,
                 ]);
             $this->mailer->send($email);
 
             return true;
-        } catch (\Symfony\Component\Mime\Exception\RfcComplianceException $e) {
+        } catch (\Throwable) {
             return false;
         }
     }

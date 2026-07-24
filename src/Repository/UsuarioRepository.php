@@ -54,4 +54,17 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->getEntityManager()->persist($usuario);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * Fuerza nuevamente el segundo factor para todos los usuarios en una sola
+     * sentencia SQL. COALESCE cubre registros heredados con versión nula.
+     */
+    public function incrementTrustedVersionForAll(): int
+    {
+        return $this->createQueryBuilder('u')
+            ->update()
+            ->set('u.trustedVersion', 'COALESCE(u.trustedVersion, 0) + 1')
+            ->getQuery()
+            ->execute();
+    }
 }

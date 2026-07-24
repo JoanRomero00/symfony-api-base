@@ -8,24 +8,30 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Dto\ChangePasswordDto;
-use App\Filter\CustomOrderFilter;
+use App\Dto\CreateUsuarioDto;
+use App\Dto\UpdateUsuarioDto;
+use App\Filter\EstadoUsuarioFilter;
 use App\Filter\GlobalSearchFilter;
-use App\Filter\SoloActivosFilter;
+use App\Filter\UsuarioSortFilter;
 use App\Repository\UsuarioRepository;
 use App\State\Processor\BajaLogicaProcessor;
 use App\State\Processor\ChangePasswordProcessor;
+use App\State\Processor\ForceTwoFactorAllProcessor;
+use App\State\Processor\ForceTwoFactorProcessor;
 use App\State\Processor\ReactivarProcessor;
 use App\State\Processor\ResetPasswordProcessor;
-use App\State\Processor\UsuarioPasswordHasherProcessor;
+use App\State\Processor\UsuarioWriteProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -45,79 +51,114 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: ['groups' => ['usuario:read']],
             security: "is_granted('ROLE_ADMIN')",
             parameters: [
-                // Ordenamiento
-                'order' => new QueryParameter(
-                    filter: CustomOrderFilter::class
-                ),
-                // Búsqueda Global 'q'
-                'q' => new QueryParameter(
+                'search' => new QueryParameter(
                     filter: GlobalSearchFilter::class,
                     properties: [
                         'username',
                         'nombre',
                         'apellido',
-                        'email',
-                        'dni',
-                        'fechaAlta',
-                        'fechaBaja',
-                        'ultimoAcceso',
-                        'cantidadAccesos',
-                    ]
+                    ],
+                    description: 'Busca por usuario, apellido o nombre.',
                 ),
-                // Solo activos (baja lógica)
-                'soloActivos' => new QueryParameter(
-                    filter: SoloActivosFilter::class,
-                    description: 'Si se envía con cualquier valor, devuelve solo los registros activos (sin fecha de baja).',
-                    schema: ['type' => 'boolean'],
-                    required: false,
+                'q' => new QueryParameter(
+                    filter: GlobalSearchFilter::class,
+                    properties: ['username', 'nombre', 'apellido'],
+                    description: 'Alias compatible del parámetro search.',
                 ),
-            ]),
+                'estado' => new QueryParameter(
+                    filter: EstadoUsuarioFilter::class,
+                    schema: ['type' => 'string', 'enum' => ['activos', 'baja', 'todos']],
+                ),
+                'sort' => new QueryParameter(
+                    filter: UsuarioSortFilter::class,
+                    schema: [
+                        'type' => 'string',
+                        'enum' => [
+                            'id',
+                            'username',
+                            'apellido',
+                            'nombre',
+                            'email',
+                            'presidencia',
+                            'fechaAlta',
+                            'fechaBaja',
+                            'ultimoAcceso',
+                            'cantidadAccesos',
+                        ],
+                    ],
+                ),
+                'direction' => new QueryParameter(
+                    filter: UsuarioSortFilter::class,
+                    schema: ['type' => 'string', 'enum' => ['asc', 'desc']],
+                ),
+                'limit' => new QueryParameter(
+                    schema: ['type' => 'integer', 'minimum' => 1, 'maximum' => 9999],
+                    description: 'Cantidad de registros por página.',
+                ),
+            ],
+        ),
         new Get(
             normalizationContext: ['groups' => ['usuario:read']],
             security: "is_granted('ROLE_ADMIN')",
         ),
         new Post(
+            input: CreateUsuarioDto::class,
+            normalizationContext: ['groups' => ['usuario:read', 'usuario:mail'], 'skip_null_values' => true],
+            denormalizationContext: ['allow_extra_attributes' => false],
+            security: "is_granted('ROLE_ADMIN')",
+            processor: UsuarioWriteProcessor::class,
+        ),
+        new Patch(
+            input: UpdateUsuarioDto::class,
             normalizationContext: ['groups' => ['usuario:read']],
-            security: "is_granted('ROLE_SUPER_ADMIN')",
-            processor: UsuarioPasswordHasherProcessor::class,
+            denormalizationContext: ['allow_extra_attributes' => false],
+            security: "is_granted('ROLE_ADMIN')",
+            processor: UsuarioWriteProcessor::class,
         ),
-        new Patch(
-            normalizationContext: ['groups' => ['usuario:read']],
-            security: "is_granted('ROLE_SUPER_ADMIN')",
-            processor: UsuarioPasswordHasherProcessor::class,
-        ),
-
-        // Baja lógica
-        new Patch(
-            uriTemplate: '/usuarios/{id}/dar-de-baja',
-            deserialize: false,
-            input: false,
-            processor: BajaLogicaProcessor::class,
-            security: "is_granted('ROLE_SUPER_ADMIN')",
-        ),
-
-        // Reactivar
-        new Patch(
-            uriTemplate: '/usuarios/{id}/reactivar',
-            deserialize: false,
-            input: false,
-            processor: ReactivarProcessor::class,
-            security: "is_granted('ROLE_SUPER_ADMIN')",
-        ),
-
-        /* Operaciones personalizadas */
-
-        // Resetear password del usuario
-        new Patch(
-            uriTemplate: '/usuarios/{id}/restablecer-clave',
+        new Delete(
             deserialize: false,
             input: false,
             output: false,
-            processor: ResetPasswordProcessor::class,
+            processor: BajaLogicaProcessor::class,
+            security: "is_granted('ROLE_ADMIN')",
+        ),
+        new Post(
+            uriTemplate: '/usuarios/{id}/reactivar',
+            status: Response::HTTP_OK,
+            deserialize: false,
+            input: false,
+            normalizationContext: ['groups' => ['usuario:read']],
+            processor: ReactivarProcessor::class,
             security: "is_granted('ROLE_SUPER_ADMIN')",
         ),
-
-        // "Cambiar clave" que puede usar el usuario logueado para cambiar su propia clave
+        new Post(
+            uriTemplate: '/usuarios/{id}/reset-password',
+            status: Response::HTTP_OK,
+            deserialize: false,
+            input: false,
+            normalizationContext: ['groups' => ['usuario:read', 'usuario:mail'], 'skip_null_values' => true],
+            processor: ResetPasswordProcessor::class,
+            security: "is_granted('ROLE_ADMIN')",
+        ),
+        new Post(
+            uriTemplate: '/usuarios/{id}/force-2fa',
+            status: Response::HTTP_OK,
+            deserialize: false,
+            input: false,
+            normalizationContext: ['groups' => ['usuario:read']],
+            processor: ForceTwoFactorProcessor::class,
+            security: "is_granted('ROLE_SUPER_ADMIN')",
+        ),
+        new Post(
+            uriTemplate: '/usuarios/force-2fa-all',
+            status: Response::HTTP_NO_CONTENT,
+            read: false,
+            deserialize: false,
+            input: false,
+            output: false,
+            processor: ForceTwoFactorAllProcessor::class,
+            security: "is_granted('ROLE_SUPER_ADMIN')",
+        ),
         new Post(
             uriTemplate: '/usuarios/cambiar-clave',
             input: ChangePasswordDto::class,
@@ -125,10 +166,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: ChangePasswordProcessor::class,
             security: "is_granted('ROLE_USER')",
         ),
-    ]
+    ],
+    order: ['username' => 'ASC'],
 )]
 class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const ALLOWED_ROLES = [
+        'ROLE_CONSULTA_PRESIDENCIA',
+        'ROLE_EMPLEADO_PRESIDENCIA',
+        'ROLE_RESPONSABLE_PRESIDENCIA',
+        'ROLE_ADMIN',
+        'ROLE_SUPER_ADMIN',
+    ];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(options: ['comment' => 'ID Usuario.'])]
@@ -171,9 +220,8 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
     #[Groups(['usuario:read'])]
     private ?string $apellido = null;
 
-    #[ORM\Column(length: 50, options: ['comment' => 'Utilizado para mostrar el usuario Logueado.'])]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 1, max: 50)]
+    #[ORM\Column(length: 50, nullable: true, options: ['comment' => 'Utilizado para mostrar el usuario Logueado.'])]
+    #[Assert\Length(max: 50)]
     #[Groups(['usuario:read'])]
     private ?string $nombre = null;
 
@@ -202,12 +250,14 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
     private ?int $cantidadAccesos = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true, options: ['comment' => 'ID del usuario que generó el alta o última modific. en el Registro.'])]
+    #[Groups(['usuario:read'])]
     private ?int $lastUserAppId = null;
 
     #[ORM\Column(length: 30, nullable: true, options: ['comment' => 'Código de autenticación 2FA.'])]
     private ?string $authCode = null;
 
     #[ORM\Column(nullable: true, options: ['comment' => 'Versionado de código 2FA.'])]
+    #[Groups(['usuario:read'])]
     private ?int $trustedVersion = null;
 
     #[ORM\Column(nullable: true, options: ['comment' => 'Profile del usuario. Usado para guardar configuraciones propias del usuario.'])]
@@ -215,7 +265,15 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
 
     #[ORM\ManyToOne(targetEntity: Presidencia::class, inversedBy: 'usuarios')]
     #[ORM\JoinColumn(name: 'presidencia_id', referencedColumnName: 'id', nullable: true)]
+    #[ApiProperty(readableLink: true, writableLink: false)]
+    #[Groups(['usuario:read'])]
     private ?Presidencia $presidencia = null;
+
+    #[Groups(['usuario:mail'])]
+    private ?bool $mailSent = null;
+
+    #[Groups(['usuario:mail'])]
+    private ?string $warning = null;
 
     /**
      * Variable no mapeada. Usada para auditar al momento de borrar la entidad.
@@ -469,6 +527,24 @@ class Usuario implements \Stringable, UserInterface, PasswordAuthenticatedUserIn
     public function setPresidencia(?Presidencia $presidencia): static
     {
         $this->presidencia = $presidencia;
+
+        return $this;
+    }
+
+    public function getMailSent(): ?bool
+    {
+        return $this->mailSent;
+    }
+
+    public function getWarning(): ?string
+    {
+        return $this->warning;
+    }
+
+    public function setMailDeliveryResult(bool $mailSent, ?string $warning): static
+    {
+        $this->mailSent = $mailSent;
+        $this->warning = $warning;
 
         return $this;
     }

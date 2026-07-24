@@ -63,13 +63,12 @@ security:
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
-        # ROLE_USER no necesita definirse 
-        # ¿Puede acceder a información de auditoría? (clave: AUDITORIA)
-        ROLE_AUDIT: [ROLE_USER] # Cualquier Usuario puede tener rol de Auditor
-        # Usuarios admin con accesos a auditoría
-        ROLE_ADMIN: [ROLE_USER]
-        # SUPERADMIN tiene todos los roles
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_AUDIT, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_CONSULTA_PRESIDENCIA: [ROLE_USER]
+        ROLE_EMPLEADO_PRESIDENCIA: [ROLE_CONSULTA_PRESIDENCIA]
+        ROLE_RESPONSABLE_PRESIDENCIA: [ROLE_EMPLEADO_PRESIDENCIA]
+        ROLE_AUDIT: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_USER, ROLE_CONSULTA_PRESIDENCIA]
+        ROLE_SUPER_ADMIN: [ROLE_RESPONSABLE_PRESIDENCIA, ROLE_ADMIN, ROLE_AUDIT, ROLE_ALLOWED_TO_SWITCH]
 
 when@test:
     security:

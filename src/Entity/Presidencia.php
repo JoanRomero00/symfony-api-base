@@ -2,118 +2,207 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Contract\ActivatableInterface;
+use App\Enum\EstadoRegistro;
+use App\Filter\CustomOrderFilter;
+use App\Filter\GlobalSearchFilter;
 use App\Repository\PresidenciaRepository;
+use App\State\Processor\ActivateProcessor;
+use App\State\Processor\DeactivateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PresidenciaRepository::class)]
 #[ORM\Table(schema: EntitySchema::MAIN)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
-        new Get(),
-        new Post(),
-        new Patch(),
-        new Delete(),
-    ]
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')",
+            parameters: [
+                'order' => new QueryParameter(
+                    filter: CustomOrderFilter::class,
+                    properties: [
+                        'id',
+                        'tribu',
+                        'codOrg',
+                        'cantSalaPro',
+                        'cantSala',
+                        'vocSala',
+                        'codFuero',
+                        'email',
+                        'estado',
+                    ],
+                ),
+                'q' => new QueryParameter(
+                    filter: GlobalSearchFilter::class,
+                    properties: ['tribu', 'codFuero', 'email', 'codOrg'],
+                ),
+                'estado' => new QueryParameter(
+                    filter: new ExactFilter(),
+                    property: 'estado',
+                    schema: ['type' => 'string', 'enum' => ['A', 'B']],
+                ),
+            ],
+        ),
+        new Get(security: "is_granted('ROLE_ADMIN')"),
+        new Post(security: "is_granted('ROLE_ADMIN')"),
+        new Patch(security: "is_granted('ROLE_ADMIN')"),
+        new Patch(
+            uriTemplate: '/presidencias/{id}/deactivate',
+            input: false,
+            deserialize: false,
+            processor: DeactivateProcessor::class,
+            security: "is_granted('ROLE_SUPER_ADMIN')",
+        ),
+        new Patch(
+            uriTemplate: '/presidencias/{id}/activate',
+            input: false,
+            deserialize: false,
+            processor: ActivateProcessor::class,
+            security: "is_granted('ROLE_SUPER_ADMIN')",
+        ),
+    ],
+    order: ['id' => 'ASC'],
 )]
-class Presidencia
+class Presidencia implements ActivatableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['usuario:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 50)]
+    #[Groups(['usuario:read'])]
     private ?string $tribu = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Range(min: 0, max: 99)]
     private ?int $cantSala = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Range(min: 0, max: 99)]
     private ?int $vocSala = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotNull]
+    #[Assert\Range(min: 0, max: 99)]
     private ?int $cantSalaPro = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull]
     private ?\DateTimeInterface $fecInst = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Range(min: 0, max: 999999999)]
     private ?int $idInst = null;
 
     #[ORM\Column(length: 40)]
+    #[Assert\Email]
+    #[Assert\Length(max: 40)]
     private ?string $email = null;
 
     #[ORM\Column(length: 1)]
+    #[ApiProperty(writable: false)]
+    #[Assert\Choice(choices: ['A', 'B'])]
     private ?string $estado = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
     private ?int $codOrg = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $licencia = null;
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $licencia = 0;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $sortComun = null;
+    #[Assert\NotNull]
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $sortComun = 0;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $sortAdHoc = null;
+    #[Assert\NotNull]
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $sortAdHoc = 0;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $sortCinco = null;
+    #[Assert\NotNull]
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $sortCinco = 0;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $sortComp = null;
+    #[Assert\NotNull]
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $sortComp = 0;
 
     /**
      * @var Collection<int, Usuario>
      */
     #[ORM\OneToMany(mappedBy: 'presidencia', targetEntity: Usuario::class)]
+    #[ApiProperty(writable: false)]
     private Collection $usuarios;
 
     /**
      * @var Collection<int, Integracion>
      */
     #[ORM\OneToMany(mappedBy: 'presidencia', targetEntity: Integracion::class)]
+    #[ApiProperty(writable: false)]
     private Collection $integracions;
 
     #[ORM\Column(length: 2, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 2)]
     private ?string $codFuero = null;
 
     /**
      * @var Collection<int, Vocal>
      */
     #[ORM\OneToMany(mappedBy: 'presidencia', targetEntity: Vocal::class)]
+    #[ApiProperty(writable: false)]
     private Collection $vocals;
 
     #[ORM\Column(nullable: true)]
+    #[ApiProperty(writable: false)]
     private ?int $lastUserAppId = null;
 
     // ############ PARA AUDITAR ############
+    #[ApiProperty(readable: false, writable: false)]
     private ?int $storeId = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $vocOtroFuero = null;
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $vocOtroFuero = 0;
 
     #[ORM\Column(nullable: true)]
-    private ?int $resta = null;
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $resta = 0;
 
     #[ORM\Column(length: 1, nullable: true)]
-    private ?int $sorteoAleatorio = null;
+    #[Assert\Choice(choices: [0, 1])]
+    private ?int $sorteoAleatorio = 0;
 
     /**
      * @var Collection<int, Expediente>
      */
     #[ORM\OneToMany(mappedBy: 'presidencia', targetEntity: Expediente::class)]
+    #[ApiProperty(writable: false)]
     private Collection $expedientes;
 
     public function __construct()
@@ -122,7 +211,7 @@ class Presidencia
         $this->integracions = new ArrayCollection();
         $this->vocals = new ArrayCollection();
         $this->expedientes = new ArrayCollection();
-        $this->estado = 'A';
+        $this->estado = EstadoRegistro::ACTIVO->value;
     }
 
     public function setStoreId(int $storeId): static
@@ -263,9 +352,9 @@ class Presidencia
         return $this;
     }
 
-    public function getLicencia(): ?bool
+    public function getLicencia(): ?int
     {
-        return $this->licencia !== null ? (bool) $this->licencia : null;
+        return $this->licencia;
     }
 
     public function setLicencia(?int $licencia): static
@@ -275,9 +364,9 @@ class Presidencia
         return $this;
     }
 
-    public function getSortComun(): ?bool
+    public function getSortComun(): ?int
     {
-        return $this->sortComun !== null ? (bool) $this->sortComun : null;
+        return $this->sortComun;
     }
 
     public function setSortComun(int $sortComun): static
@@ -287,9 +376,9 @@ class Presidencia
         return $this;
     }
 
-    public function getSortAdHoc(): ?bool
+    public function getSortAdHoc(): ?int
     {
-        return $this->sortAdHoc !== null ? (bool) $this->sortAdHoc : null;
+        return $this->sortAdHoc;
     }
 
     public function setSortAdHoc(int $sortAdHoc): static
@@ -299,9 +388,9 @@ class Presidencia
         return $this;
     }
 
-    public function getSortCinco(): ?bool
+    public function getSortCinco(): ?int
     {
-        return $this->sortCinco !== null ? (bool) $this->sortCinco : null;
+        return $this->sortCinco;
     }
 
     public function setSortCinco(int $sortCinco): static
@@ -311,9 +400,9 @@ class Presidencia
         return $this;
     }
 
-    public function getSortComp(): ?bool
+    public function getSortComp(): ?int
     {
-        return $this->sortComp !== null ? (bool) $this->sortComp : null;
+        return $this->sortComp;
     }
 
     public function setSortComp(int $sortComp): static
@@ -427,33 +516,33 @@ class Presidencia
         return $this;
     }
 
-    public function getResta(): ?bool
+    public function getResta(): ?int
     {
-        return $this->resta !== null ? (bool) $this->resta : null;
+        return $this->resta;
     }
 
-    public function setResta(int $resta): static
+    public function setResta(?int $resta): static
     {
         $this->resta = $resta;
 
         return $this;
     }
 
-    public function getVocOtroFuero(): ?bool
+    public function getVocOtroFuero(): ?int
     {
-        return $this->vocOtroFuero !== null ? (bool) $this->vocOtroFuero : null;
+        return $this->vocOtroFuero;
     }
 
-    public function setVocOtroFuero(int $vocOtroFuero): static
+    public function setVocOtroFuero(?int $vocOtroFuero): static
     {
         $this->vocOtroFuero = $vocOtroFuero;
 
         return $this;
     }
 
-    public function getSorteoAleatorio(): ?bool
+    public function getSorteoAleatorio(): ?int
     {
-        return $this->sorteoAleatorio !== null ? (bool) $this->sorteoAleatorio : null;
+        return $this->sorteoAleatorio;
     }
 
     public function setSorteoAleatorio(?int $sorteoAleatorio): static

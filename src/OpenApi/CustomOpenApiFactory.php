@@ -82,15 +82,29 @@ final class CustomOpenApiFactory implements OpenApiFactoryInterface
             ]);
         }
 
+        if (!isset($schemas['PaginationSummary'])) {
+            $schemas['PaginationSummary'] = new \ArrayObject([
+                'type' => 'object',
+                'properties' => [
+                    'page' => ['type' => 'integer', 'example' => 1],
+                    'limit' => ['type' => 'integer', 'example' => 20],
+                    'totalItems' => ['type' => 'integer', 'example' => 50],
+                    'totalPages' => ['type' => 'integer', 'example' => 3],
+                ],
+                'required' => ['page', 'limit', 'totalItems', 'totalPages'],
+            ]);
+        }
+
         // --- Esquema genérico  reutilizable de colecciones 'PaginatedResponse' ---
         if (!isset($schemas['PaginatedResponse'])) {
             $schemas['PaginatedResponse'] = new \ArrayObject([
                 'type' => 'object',
                 'properties' => [
+                    'pagination' => ['$ref' => '#/components/schemas/PaginationSummary'],
                     'meta' => ['$ref' => '#/components/schemas/PaginationMeta'],
                     'links' => ['$ref' => '#/components/schemas/PaginationLinks'],
                 ],
-                'required' => ['meta', 'links'],
+                'required' => ['pagination', 'meta', 'links'],
             ]);
         }
 

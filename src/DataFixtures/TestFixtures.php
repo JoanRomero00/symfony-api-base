@@ -6,6 +6,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Presidencia;
 use App\Entity\Usuario;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,6 +21,27 @@ class TestFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $presidencia = new Presidencia();
+        $presidencia
+            ->setTribu('Cámara de prueba')
+            ->setCantSala(1)
+            ->setVocSala(3)
+            ->setCantSalaPro(0)
+            ->setFecInst(new \DateTime('2020-01-01'))
+            ->setIdInst(100)
+            ->setEmail('camara@test.com')
+            ->setCodOrg(100)
+            ->setCodFuero('C')
+            ->setLicencia(0)
+            ->setSortComun(0)
+            ->setSortAdHoc(0)
+            ->setSortCinco(0)
+            ->setSortComp(0)
+            ->setVocOtroFuero(0)
+            ->setResta(0)
+            ->setSorteoAleatorio(0);
+        $manager->persist($presidencia);
+
         $user = new Usuario();
         $user->setUsername('testuser');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'testpass'));
@@ -27,6 +49,7 @@ class TestFixtures extends Fixture
         $user->setNombre('Test');
         $user->setApellido('User');
         $user->setEmail('test@test.com');
+        $user->setPresidencia($presidencia);
         $user->setFechaAlta();
         $manager->persist($user);
 
