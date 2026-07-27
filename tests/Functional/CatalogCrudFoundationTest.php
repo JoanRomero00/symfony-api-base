@@ -230,6 +230,27 @@ class CatalogCrudFoundationTest extends AbstractApiTestCase
     }
 
     #[DataProvider('catalogProvider')]
+    public function testDeactivatedCatalogCannotBeEdited(
+        string $resourcePath,
+        array $validPayload,
+        array $invalidPayload,
+        array $updatePayload,
+        string $updatedField,
+        mixed $updatedValue,
+    ): void {
+        $client = $this->createAuthenticatedClient('superadmin', 'superpass');
+        $id = $this->createResource($client, $resourcePath, $validPayload);
+        $this->patchWithoutInput($client, sprintf('%s/%d/deactivate', $resourcePath, $id));
+
+        $client->request('PATCH', sprintf('%s/%d', $resourcePath, $id), [
+            'headers' => ['Content-Type' => 'application/merge-patch+json'],
+            'json' => $updatePayload,
+        ]);
+
+        $this->assertResponseStatusCodeSame(409);
+    }
+
+    #[DataProvider('catalogProvider')]
     public function testPhysicalDeleteIsNotAvailable(
         string $resourcePath,
         array $validPayload,

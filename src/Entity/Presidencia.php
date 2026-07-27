@@ -16,6 +16,7 @@ use App\Filter\CustomOrderFilter;
 use App\Filter\GlobalSearchFilter;
 use App\Repository\PresidenciaRepository;
 use App\State\Processor\ActivateProcessor;
+use App\State\Processor\ActiveOnlyUpdateProcessor;
 use App\State\Processor\DeactivateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,7 +59,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Get(security: "is_granted('ROLE_ADMIN')"),
         new Post(security: "is_granted('ROLE_ADMIN')"),
-        new Patch(security: "is_granted('ROLE_ADMIN')"),
+        new Patch(
+            processor: ActiveOnlyUpdateProcessor::class,
+            security: "is_granted('ROLE_ADMIN')",
+        ),
         new Patch(
             uriTemplate: '/presidencias/{id}/deactivate',
             input: false,

@@ -86,6 +86,10 @@ final class UsuarioWriteProcessor implements ProcessorInterface
             throw new NotFoundHttpException('El usuario solicitado no existe.');
         }
 
+        if (null !== $usuario->getFechaBaja()) {
+            throw new ConflictHttpException('No se puede editar un usuario dado de baja. Debe reactivarlo previamente.');
+        }
+
         if (!$this->security->isGranted('ROLE_SUPER_ADMIN') && in_array('ROLE_SUPER_ADMIN', $usuario->getRoles(), true)) {
             throw new AccessDeniedHttpException('Solo un superadministrador puede modificar otro superadministrador.');
         }

@@ -135,6 +135,15 @@ final class UsuarioTest extends AbstractApiTestCase
             "SELECT fecha_baja FROM {$this->schema()}.usuario WHERE id = ?",
             [$created['id']],
         ));
+
+        $client->request('PATCH', '/api/usuarios/'.$created['id'], [
+            'headers' => ['Content-Type' => 'application/merge-patch+json'],
+            'json' => ['apellido' => 'Edición no permitida'],
+        ]);
+        self::assertResponseStatusCodeSame(409);
+
+        $client->request('POST', '/api/usuarios/'.$created['id'].'/reset-password');
+        self::assertResponseStatusCodeSame(409);
     }
 
     public function testAdminCannotUseSuperAdminActions(): void
@@ -179,6 +188,9 @@ final class UsuarioTest extends AbstractApiTestCase
         $created = $this->createUser($client, 'two_factor_target');
 
         $client->request('DELETE', '/api/usuarios/'.$created['id']);
+        $client->request('POST', '/api/usuarios/'.$created['id'].'/force-2fa');
+        self::assertResponseStatusCodeSame(409);
+
         $reactivated = $client->request('POST', '/api/usuarios/'.$created['id'].'/reactivar')->toArray();
         self::assertNull($reactivated['fechaBaja']);
 

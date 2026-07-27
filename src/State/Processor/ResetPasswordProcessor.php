@@ -11,6 +11,7 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Usuario;
 use App\Service\UsuarioService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ResetPasswordProcessor implements ProcessorInterface
@@ -32,7 +33,14 @@ class ResetPasswordProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Usuario
     {
-        // $data ES la entidad Usuario cargada por API Platform
+        if (!$data instanceof Usuario) {
+            throw new \LogicException('No se pudo resolver el usuario.');
+        }
+
+        if (null !== $data->getFechaBaja()) {
+            throw new ConflictHttpException('No se puede resetear la contraseña de un usuario dado de baja. Debe reactivarlo previamente.');
+        }
+
         $usuario = $data;
 
         $newPassword = $this->usuarioService->generatePassword();
