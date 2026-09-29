@@ -26,6 +26,14 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertResponseStatusCodeSame(401);
     }
 
+    public function testEventsRequireAuth(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/api/auditoria/test_table/eventos');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
+
     public function testPauseRequiresAuth(): void
     {
         $client = static::createClient();
@@ -112,6 +120,14 @@ class AuditoriaTest extends AbstractApiTestCase
     {
         $client = $this->createAuthenticatedClient('targetuser', 'targetpass');
         $client->request('POST', '/api/auditoria/test_table/activar');
+
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testEventsForbiddenForRoleUser(): void
+    {
+        $client = $this->createAuthenticatedClient('targetuser', 'targetpass');
+        $client->request('GET', '/api/auditoria/test_table/eventos');
 
         $this->assertResponseStatusCodeSame(403);
     }
@@ -210,6 +226,7 @@ class AuditoriaTest extends AbstractApiTestCase
         $client = $this->createAuthenticatedClient('testuser', 'testpass');
 
         // 1. Limpiar estado previo por si quedó de una ejecución fallida
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
         $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
 
         // 2. Activar — crea tabla de auditoría + trigger + función
@@ -228,7 +245,33 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertTrue($tableConfig['existTriggerAudit'], 'Debería existir trigger de auditoría');
         $this->assertSame('ACTIVA', $tableConfig['estado']);
 
-        // 3. Pausar — elimina el trigger
+        // 3. Registrar y consultar un evento como lo hará el visor del frontend
+        $connection = static::getContainer()->get('doctrine')->getConnection();
+        $userId = (int) $connection->fetchOne(
+            'SELECT id FROM app_schema.usuario WHERE username = :username',
+            ['username' => 'testuser']
+        );
+        $connection->executeStatement(
+            "INSERT INTO app_audit_test.configuracion_sistema_audit
+                (audit_iduserapp, audit_identity, audit_action, old_data, new_data)
+             VALUES (:userId, 99, 'U', :oldData, :newData)",
+            [
+                'userId' => $userId,
+                'oldData' => '{"valor":"anterior"}',
+                'newData' => '{"valor":"nuevo"}',
+            ]
+        );
+
+        $response = $client->request('GET', '/api/auditoria/'.self::TEST_TABLE.'/eventos?operacion=U&registroId=99');
+        $this->assertResponseIsSuccessful();
+        $eventData = $response->toArray();
+        $this->assertSame(1, $eventData['total']);
+        $this->assertCount(1, $eventData['items']);
+        $this->assertSame('Modificación', $eventData['items'][0]['operacion']);
+        $this->assertSame('anterior', $eventData['items'][0]['diferencias']['valor']['left']);
+        $this->assertSame('nuevo', $eventData['items'][0]['diferencias']['valor']['right']);
+
+        // 4. Pausar — elimina el trigger
         $response = $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
         $this->assertResponseIsSuccessful();
         $data = $response->toArray();
@@ -242,7 +285,7 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertFalse($tableConfig['existTriggerAudit'], 'Trigger debería estar eliminado');
         $this->assertSame('PAUSADA', $tableConfig['estado']);
 
-        // 4. Reanudar — recrea el trigger
+        // 5. Reanudar — recrea el trigger
         $response = $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/reanudar');
         $this->assertResponseIsSuccessful();
         $data = $response->toArray();
@@ -255,7 +298,12 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertTrue($tableConfig['existTriggerAudit'], 'Trigger debería existir de nuevo');
         $this->assertSame('ACTIVA', $tableConfig['estado']);
 
-        // 5. Eliminar — elimina tabla + secuencia (limpieza)
+        // 6. Pausar antes de eliminar para evitar perder trazabilidad activa.
+        $response = $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($response->toArray()['success']);
+
+        // 7. Eliminar — elimina tabla, secuencia y función (limpieza)
         $response = $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
         $this->assertResponseIsSuccessful();
         $data = $response->toArray();
@@ -272,6 +320,9 @@ class AuditoriaTest extends AbstractApiTestCase
     {
         $client = $this->createAuthenticatedClient('testuser', 'testpass');
 
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
+
         // Activar
         $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/activar');
         $this->assertResponseIsSuccessful();
@@ -283,6 +334,7 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertFalse($data['success']);
 
         // Limpiar
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
         $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
     }
 
@@ -297,6 +349,7 @@ class AuditoriaTest extends AbstractApiTestCase
         $this->assertArrayHasKey('message', $data);
 
         // Limpiar todo lo que se activó
+        $client->request('POST', '/api/auditoria/pausar-todas');
         $client->request('POST', '/api/auditoria/eliminar-todas');
     }
 
@@ -372,6 +425,7 @@ class AuditoriaTest extends AbstractApiTestCase
         }
 
         // Limpiar
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
         $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
     }
 
@@ -393,6 +447,34 @@ class AuditoriaTest extends AbstractApiTestCase
         if ($statusCode === 200) {
             $this->assertResponseHeaderSame('Content-Type', 'application/pdf');
         }
+    }
+
+    public function testUnknownTableCannotBeManaged(): void
+    {
+        $client = $this->createAuthenticatedClient('testuser', 'testpass');
+        $response = $client->request('POST', '/api/auditoria/tabla_inexistente/activar');
+
+        $this->assertResponseIsSuccessful();
+        $data = $response->toArray();
+        $this->assertFalse($data['success']);
+        $this->assertStringContainsString('no pertenece', $data['message']);
+    }
+
+    public function testActiveAuditMustBePausedBeforeDelete(): void
+    {
+        $client = $this->createAuthenticatedClient('testuser', 'testpass');
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/activar');
+
+        $response = $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
+        $this->assertResponseIsSuccessful();
+        $data = $response->toArray();
+        $this->assertFalse($data['success']);
+        $this->assertStringContainsString('pausar', strtolower($data['message']));
+
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/pausar');
+        $client->request('POST', '/api/auditoria/' . self::TEST_TABLE . '/eliminar');
     }
 
     // ── Helper ──

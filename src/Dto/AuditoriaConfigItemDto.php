@@ -22,7 +22,7 @@ readonly class AuditoriaConfigItemDto
         public string $size,
         public bool $isAuditable,
         public string $estado,
-        public bool $isAudited,
+        public ?bool $isAudited,
         public bool $existTableAudit,
         public bool $existTriggerAudit,
         public int $cntRegisterAudit,

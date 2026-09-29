@@ -8,6 +8,7 @@ namespace App\Service;
 
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
+use Doctrine\DBAL\Exception\SchemaDoesNotExist;
 use Doctrine\DBAL\Exception\TableExistsException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -405,8 +406,10 @@ class AuditoriaService
             return 'La tabla a Auditar no existe!';
         } catch (TableExistsException $e) {
             return 'La tabla de Auditoría ya existe!';
+        } catch (SchemaDoesNotExist $e) {
+            return 'La infraestructura de auditoría no está instalada. Ejecute "php bin/console app:auditoria:instalar" y vuelva a intentarlo.';
         } catch (DriverException  $e) {
-            return 'Error en función activate. Ya existe un objeto similar al que se intentó crear!<br>Verifique que no exista la tabla o trigger de Auditoría para la tabla.<hr><small>'.$e.'</small>';
+            return 'No se pudo activar la auditoría: '.$e->getMessage();
         }
     }
 
@@ -459,20 +462,20 @@ class AuditoriaService
      */
     public function delete(string $tableName)
     {
+        $queryTrigger = sprintf('DROP TRIGGER IF EXISTS %s%s_upd ON %s.%s', $tableName, $this->auditNameSuffix, $this->schemaDataName, $tableName);
         $query1 = sprintf('DROP TABLE IF EXISTS %s.%s%s', $this->schemaAuditName, $tableName, $this->auditNameSuffix);
         $query2 = sprintf('DROP SEQUENCE IF EXISTS %s.%s%s_id_seq', $this->schemaAuditName, $tableName, $this->auditNameSuffix);
+        $queryFunction = sprintf('DROP FUNCTION IF EXISTS %s.%s%s_upd()', $this->schemaAuditName, $tableName, $this->auditNameSuffix);
 
         try {
-            $this->entityManager
-                ->getConnection()
-                ->prepare($query1)
-                ->executeQuery()
-                ->fetchOne();
-            $this->entityManager
-                ->getConnection()
-                ->prepare($query2)
-                ->executeQuery()
-                ->fetchOne();
+            $this->entityManager->getConnection()->transactional(
+                static function ($connection) use ($queryTrigger, $query1, $query2, $queryFunction): void {
+                    $connection->executeStatement($queryTrigger);
+                    $connection->executeStatement($query1);
+                    $connection->executeStatement($query2);
+                    $connection->executeStatement($queryFunction);
+                }
+            );
 
             return '';
         } catch (DriverException  $e) {
@@ -491,7 +494,8 @@ class AuditoriaService
         ?int $idUsuario = null,
         ?string $tipoOperacion = null,
         ?int $limiteResultados = null,
-        bool $incluirModificaciones,
+        bool $incluirModificaciones = false,
+        bool $ordenDescendente = false,
     ): array {
         $tableName = $this->getTableName($entityName);
 
@@ -499,7 +503,14 @@ class AuditoriaService
             throw new \LogicException('No se pudo determinar el nombre de la tabla de auditoría');
         }
 
-        $query = sprintf("SELECT a.id, a.audit_timestamp, a.audit_iduserapp, a.audit_identity, 
+        $connection = $this->entityManager->getConnection();
+        $auditSchema = $connection->quoteIdentifier($this->schemaAuditName);
+        $dataSchema = $connection->quoteIdentifier($this->schemaDataName);
+        $auditTable = $connection->quoteIdentifier($tableName.$this->auditNameSuffix);
+        $userTable = $connection->quoteIdentifier('usuario');
+
+        $query = sprintf("SELECT a.id, a.audit_timestamp, a.audit_iduserapp, a.audit_identity,
+                    a.audit_action as audit_action_code,
                     CASE audit_action
                         WHEN 'I' THEN 'Alta'
                         WHEN 'U' THEN 'Modificación' --En this->auditDiff se refencia el tipo por 'Modificación'
@@ -513,32 +524,56 @@ class AuditoriaService
                     u.username,
                     count(*) OVER() AS total_registros,
                     '%s' as Entidad
-                FROM %s.%s%s a
-                INNER JOIN %s.usuario u ON u.id = a.audit_iduserapp", $this->schemaAuditName, $tableName, $this->schemaAuditName, $tableName, $this->auditNameSuffix, $this->schemaDataName);
-        if ($fechaDesde && $fechaHasta) {
-            $query = sprintf("%s WHERE a.audit_timestamp BETWEEN '%s' AND '%s'", $query, $fechaDesde, $fechaHasta);
+                FROM %s.%s a
+                LEFT JOIN %s.%s u ON u.id = a.audit_iduserapp",
+            $auditSchema,
+            $tableName,
+            $auditSchema,
+            $auditTable,
+            $dataSchema,
+            $userTable
+        );
+
+        $conditions = [];
+        $parameters = [];
+        if ($fechaDesde) {
+            $conditions[] = 'a.audit_timestamp >= :fechaDesde';
+            $parameters['fechaDesde'] = $fechaDesde;
+        }
+        if ($fechaHasta) {
+            $conditions[] = 'a.audit_timestamp <= :fechaHasta';
+            $parameters['fechaHasta'] = $fechaHasta;
+        }
+        if (null !== $registroEntidadId) {
+            $conditions[] = 'a.audit_identity = :registroEntidadId';
+            $parameters['registroEntidadId'] = $registroEntidadId;
+        }
+        if (null !== $idUsuario) {
+            $conditions[] = 'u.id = :idUsuario';
+            $parameters['idUsuario'] = $idUsuario;
+        }
+        if (null !== $tipoOperacion) {
+            $tipoOperacion = [
+                'insert' => 'I',
+                'update' => 'U',
+                'delete' => 'D',
+            ][strtolower($tipoOperacion)] ?? strtoupper($tipoOperacion);
+            $conditions[] = 'a.audit_action = :tipoOperacion';
+            $parameters['tipoOperacion'] = $tipoOperacion;
         }
 
-        if (!is_null($registroEntidadId)) {
-            $query = sprintf('%s AND a.audit_identity = %s', $query, $registroEntidadId);
-        }
-        if (!is_null($idUsuario)) {
-            $query = sprintf('%s AND u.id = %s', $query, $idUsuario);
-        }
-        if (!is_null($tipoOperacion)) {
-            $query = sprintf("%s AND upper(audit_action) like upper('%s')", $query, $tipoOperacion);
+        if ([] !== $conditions) {
+            $query .= ' WHERE '.implode(' AND ', $conditions);
         }
 
-        $query = sprintf('%s ORDER BY a.id', $query);
+        $query .= ' ORDER BY a.id '.($ordenDescendente ? 'DESC' : 'ASC');
 
-        if (!is_null($limiteResultados)) {
-            $query = sprintf('%s LIMIT %s', $query, $limiteResultados);
+        if (null !== $limiteResultados) {
+            $query .= ' LIMIT '.max(1, $limiteResultados);
         }
 
-        $result = $this->entityManager
-            ->getConnection()
-            ->prepare($query)
-            ->executeQuery()
+        $result = $connection
+            ->executeQuery($query, $parameters)
             ->fetchAllAssociative();
 
         // Obtienen diferencias en caso que se encuentre tildado la Inclusión del detalle de las Modificaiones

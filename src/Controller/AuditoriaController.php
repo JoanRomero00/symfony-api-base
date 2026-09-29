@@ -47,44 +47,145 @@ class AuditoriaController extends AbstractController
         return new JsonResponse($data);
     }
 
-    public function activate(string $nombreTabla): JsonResponse
+    public function events(string $nombreTabla, Request $request): JsonResponse
     {
-        $error = $this->auditoriaService->activate($nombreTabla);
+        $config = $this->findTableConfig($nombreTabla);
+        if (!$config) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "La tabla {$nombreTabla} no pertenece a una entidad gestionada por el sistema.",
+            ], Response::HTTP_NOT_FOUND);
+        }
+        if (!$config['existTableAudit']) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "La auditoría de {$nombreTabla} no está activada.",
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $fechaDesde = $this->readDateFilter($request, 'fechaDesde', false);
+            $fechaHasta = $this->readDateFilter($request, 'fechaHasta', true);
+            if ($fechaDesde && $fechaHasta && $fechaDesde > $fechaHasta) {
+                throw new \InvalidArgumentException('La fecha desde no puede ser posterior a la fecha hasta.');
+            }
+            $registroId = $this->readPositiveIntegerFilter($request, 'registroId');
+            $usuarioId = $this->readPositiveIntegerFilter($request, 'usuarioId');
+            $limite = $this->readPositiveIntegerFilter($request, 'limite') ?? 100;
+            if ($limite > 500) {
+                throw new \InvalidArgumentException('El límite máximo de resultados es 500.');
+            }
+
+            $operacion = strtoupper((string) $request->query->get('operacion', ''));
+            if ('' !== $operacion && !in_array($operacion, ['I', 'U', 'D'], true)) {
+                throw new \InvalidArgumentException('La operación debe ser I, U o D.');
+            }
+
+            $events = $this->auditoriaService->getAuditoria(
+                $config['entidad'],
+                $fechaDesde,
+                $fechaHasta,
+                $registroId,
+                $usuarioId,
+                '' !== $operacion ? $operacion : null,
+                $limite,
+                true,
+                true,
+            );
+        } catch (\InvalidArgumentException|\LogicException $exception) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $items = array_map(static fn (array $event): array => [
+            'id' => (int) $event['id'],
+            'fecha' => $event['audit_timestamp'],
+            'usuarioId' => null !== $event['audit_iduserapp'] ? (int) $event['audit_iduserapp'] : null,
+            'usuario' => $event['username'],
+            'registroId' => (int) $event['audit_identity'],
+            'operacion' => $event['audit_action'],
+            'operacionCodigo' => $event['audit_action_code'],
+            'datosAnteriores' => self::decodeJsonValue($event['old_data']),
+            'datosNuevos' => self::decodeJsonValue($event['new_data']),
+            'diferencias' => $event['diferencias'] ?? [],
+        ], $events);
 
         return new JsonResponse([
-            'success' => $error ? false : true,
-            'message' => $error ?: "Auditoría activada para {$nombreTabla}",
+            'items' => $items,
+            'total' => isset($events[0]) ? (int) $events[0]['total_registros'] : 0,
+            'limite' => $limite,
         ]);
+    }
+
+    public function activate(string $nombreTabla): JsonResponse
+    {
+        $config = $this->findTableConfig($nombreTabla);
+        if (!$config) {
+            return $this->invalidAction("La tabla {$nombreTabla} no pertenece a una entidad gestionada por el sistema.");
+        }
+        if (!$config['isAuditable'] || true !== $config['isAudited']) {
+            return $this->invalidAction("La entidad {$config['entidad']} no está configurada para auditoría.");
+        }
+        if ($config['existTableAudit']) {
+            return $this->invalidAction("La auditoría de {$nombreTabla} ya fue activada.");
+        }
+
+        $error = $this->auditoriaService->activate($nombreTabla);
+
+        return $this->actionResult($error, "Auditoría activada para {$nombreTabla}");
     }
 
     public function pause(string $nombreTabla): JsonResponse
     {
+        $config = $this->findTableConfig($nombreTabla);
+        if (!$config) {
+            return $this->invalidAction("La tabla {$nombreTabla} no pertenece a una entidad gestionada por el sistema.");
+        }
+        if (!$config['existTableAudit'] || !$config['existTriggerAudit']) {
+            return $this->invalidAction("La auditoría de {$nombreTabla} no está activa.");
+        }
+
         $error = $this->auditoriaService->pause($nombreTabla);
 
-        return new JsonResponse([
-            'success' => $error ? false : true,
-            'message' => $error ?: "Auditoría pausada para {$nombreTabla}",
-        ]);
+        return $this->actionResult($error, "Auditoría pausada para {$nombreTabla}");
     }
 
     public function resume(string $nombreTabla): JsonResponse
     {
+        $config = $this->findTableConfig($nombreTabla);
+        if (!$config) {
+            return $this->invalidAction("La tabla {$nombreTabla} no pertenece a una entidad gestionada por el sistema.");
+        }
+        if (!$config['isAuditable'] || true !== $config['isAudited']) {
+            return $this->invalidAction("La entidad {$config['entidad']} no está configurada para auditoría.");
+        }
+        if (!$config['existTableAudit'] || $config['existTriggerAudit']) {
+            return $this->invalidAction("La auditoría de {$nombreTabla} no está pausada.");
+        }
+
         $error = $this->auditoriaService->resume($nombreTabla);
 
-        return new JsonResponse([
-            'success' => $error ? false : true,
-            'message' => $error ?: "Auditoría reanudada para {$nombreTabla}",
-        ]);
+        return $this->actionResult($error, "Auditoría reanudada para {$nombreTabla}");
     }
 
     public function delete(string $nombreTabla): JsonResponse
     {
+        $config = $this->findTableConfig($nombreTabla);
+        if (!$config) {
+            return $this->invalidAction("La tabla {$nombreTabla} no pertenece a una entidad gestionada por el sistema.");
+        }
+        if (!$config['existTableAudit']) {
+            return $this->invalidAction("La auditoría de {$nombreTabla} no está activada.");
+        }
+        if ($config['existTriggerAudit']) {
+            return $this->invalidAction("Primero debe pausar la auditoría de {$nombreTabla}.");
+        }
+
         $error = $this->auditoriaService->delete($nombreTabla);
 
-        return new JsonResponse([
-            'success' => $error ? false : true,
-            'message' => $error ?: "Registros eliminados para {$nombreTabla}",
-        ]);
+        return $this->actionResult($error, "Registros de auditoría eliminados para {$nombreTabla}");
     }
 
     public function activateAll(): JsonResponse
@@ -100,6 +201,7 @@ class AuditoriaController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => "Activadas {$count} entidades",
+            'count' => $count,
         ]);
     }
 
@@ -116,6 +218,7 @@ class AuditoriaController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => "Pausadas {$count} entidades",
+            'count' => $count,
         ]);
     }
 
@@ -132,6 +235,7 @@ class AuditoriaController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => "Reactivadas {$count} entidades",
+            'count' => $count,
         ]);
     }
 
@@ -148,6 +252,7 @@ class AuditoriaController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => "Borradas {$count} entidades de auditoría",
+            'count' => $count,
         ]);
     }
 
@@ -239,5 +344,78 @@ class AuditoriaController extends AbstractController
         }
 
         return $items;
+    }
+
+    private function findTableConfig(string $tableName): ?array
+    {
+        foreach ($this->auditoriaService->getConfig() as $config) {
+            if ($config['tableName'] === $tableName) {
+                return $config;
+            }
+        }
+
+        return null;
+    }
+
+    private function readDateFilter(Request $request, string $name, bool $endOfDay): ?string
+    {
+        $value = trim((string) $request->query->get($name, ''));
+        if ('' === $value) {
+            return null;
+        }
+
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        $errors = \DateTimeImmutable::getLastErrors();
+        if (!$date || (false !== $errors && (0 < $errors['warning_count'] || 0 < $errors['error_count']))) {
+            throw new \InvalidArgumentException("El filtro {$name} debe tener formato AAAA-MM-DD.");
+        }
+
+        return $date->format('Y-m-d').($endOfDay ? ' 23:59:59' : ' 00:00:00');
+    }
+
+    private function readPositiveIntegerFilter(Request $request, string $name): ?int
+    {
+        $value = trim((string) $request->query->get($name, ''));
+        if ('' === $value) {
+            return null;
+        }
+        if (!ctype_digit($value) || 1 > (int) $value) {
+            throw new \InvalidArgumentException("El filtro {$name} debe ser un número entero positivo.");
+        }
+
+        return (int) $value;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private static function decodeJsonValue(mixed $value): ?array
+    {
+        if (null === $value) {
+            return null;
+        }
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode((string) $value, true);
+
+        return is_array($decoded) ? $decoded : null;
+    }
+
+    private function invalidAction(string $message): JsonResponse
+    {
+        return new JsonResponse([
+            'success' => false,
+            'message' => $message,
+        ]);
+    }
+
+    private function actionResult(string $error, string $successMessage): JsonResponse
+    {
+        return new JsonResponse([
+            'success' => '' === $error,
+            'message' => $error ?: $successMessage,
+        ]);
     }
 }

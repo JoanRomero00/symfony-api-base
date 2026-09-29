@@ -19,12 +19,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -177,12 +177,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -249,12 +249,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -321,12 +321,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -565,12 +565,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -650,12 +650,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -728,6 +728,158 @@
                 ]
             }
         },
+        "/api/auditoria/{nombreTabla}/eventos": {
+            "get": {
+                "operationId": "api_auditoria_eventos",
+                "tags": [
+                    "Auditoria"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Auditoria resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaEventosResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
+                    }
+                },
+                "summary": "Consulta los eventos registrados para una entidad auditada",
+                "description": "Consulta los eventos registrados para una entidad auditada",
+                "parameters": [
+                    {
+                        "name": "nombreTabla",
+                        "in": "path",
+                        "description": "Auditoria identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false
+                    },
+                    {
+                        "name": "fechaDesde",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "fechaHasta",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "registroId",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "usuarioId",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "operacion",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "I",
+                                "U",
+                                "D"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "limite",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 500,
+                            "default": 100
+                        },
+                        "style": "form",
+                        "explode": true
+                    }
+                ]
+            }
+        },
         "/api/auditoria/{nombreTabla}/pausar": {
             "post": {
                 "operationId": "api_auditoria_pausar",
@@ -735,12 +887,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -820,12 +972,12 @@
                     "Auditoria"
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Auditoria resource created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Auditoria"
+                                    "$ref": "#/components/schemas/Auditoria.AuditoriaActionResultDto"
                                 }
                             }
                         },
@@ -5861,8 +6013,22 @@
     },
     "components": {
         "schemas": {
-            "Auditoria": {
-                "type": "object"
+            "Auditoria.AuditoriaActionResultDto": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
             },
             "Auditoria.AuditoriaConfigItemDto": {
                 "type": "object",
@@ -5928,8 +6094,99 @@
                     "id"
                 ]
             },
+            "Auditoria.AuditoriaEventosResponseDto": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuditoriaEventoDto"
+                        }
+                    },
+                    "total": {
+                        "type": "integer"
+                    },
+                    "limite": {
+                        "type": "integer"
+                    }
+                }
+            },
             "Auditoria.pdf": {
                 "type": "object"
+            },
+            "AuditoriaEventoDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "fecha": {
+                        "type": "string"
+                    },
+                    "usuarioId": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "usuario": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "registroId": {
+                        "type": "integer"
+                    },
+                    "operacion": {
+                        "type": "string"
+                    },
+                    "operacionCodigo": {
+                        "type": "string"
+                    },
+                    "datosAnteriores": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "additionalProperties": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "datosNuevos": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "additionalProperties": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "diferencias": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    },
+                    "iri": {
+                        "type": "string",
+                        "format": "uri-reference",
+                        "readOnly": true,
+                        "example": "/api/recurso/1"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
             },
             "ConfiguracionSistema": {
                 "type": "object",

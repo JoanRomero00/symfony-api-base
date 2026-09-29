@@ -13,7 +13,9 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\Parameter;
 use App\Controller\AuditoriaController;
+use App\Dto\AuditoriaActionResultDto;
 use App\Dto\AuditoriaConfigItemDto;
+use App\Dto\AuditoriaEventosResponseDto;
 use App\Dto\AuditoriaReporteQueryDto;
 use App\Dto\ReporteActividadQueryDto;
 
@@ -28,13 +30,36 @@ use App\Dto\ReporteActividadQueryDto;
             write: false,
             output: AuditoriaConfigItemDto::class,
         ),
+        new Get(
+            name: 'api_auditoria_eventos',
+            uriTemplate: '/auditoria/{nombreTabla}/eventos',
+            controller: AuditoriaController::class.'::events',
+            read: false,
+            write: false,
+            input: false,
+            output: AuditoriaEventosResponseDto::class,
+            openapi: new Operation(
+                summary: 'Consulta los eventos registrados para una entidad auditada',
+                parameters: [
+                    new Parameter(name: 'nombreTabla', in: 'path', required: true, schema: ['type' => 'string']),
+                    new Parameter(name: 'fechaDesde', in: 'query', schema: ['type' => 'string', 'format' => 'date']),
+                    new Parameter(name: 'fechaHasta', in: 'query', schema: ['type' => 'string', 'format' => 'date']),
+                    new Parameter(name: 'registroId', in: 'query', schema: ['type' => 'integer', 'minimum' => 1]),
+                    new Parameter(name: 'usuarioId', in: 'query', schema: ['type' => 'integer', 'minimum' => 1]),
+                    new Parameter(name: 'operacion', in: 'query', schema: ['type' => 'string', 'enum' => ['I', 'U', 'D']]),
+                    new Parameter(name: 'limite', in: 'query', schema: ['type' => 'integer', 'minimum' => 1, 'maximum' => 500, 'default' => 100]),
+                ],
+            ),
+        ),
         new Post(
             name: 'api_auditoria_activar',
             uriTemplate: '/auditoria/{nombreTabla}/activar',
             controller: AuditoriaController::class.'::activate',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_pausar',
@@ -42,7 +67,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::pause',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_reanudar',
@@ -50,7 +77,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::resume',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_eliminar',
@@ -58,7 +87,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::delete',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_activar_todas',
@@ -66,7 +97,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::activateAll',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_pausar_todas',
@@ -74,7 +107,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::pauseAll',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_reanudar_todas',
@@ -82,7 +117,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::resumeAll',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Post(
             name: 'api_auditoria_eliminar_todas',
@@ -90,7 +127,9 @@ use App\Dto\ReporteActividadQueryDto;
             controller: AuditoriaController::class.'::deleteAll',
             read: false,
             write: false,
-            input: false
+            input: false,
+            output: AuditoriaActionResultDto::class,
+            status: 200,
         ),
         new Get(
             name: 'api_auditoria_reporte',
