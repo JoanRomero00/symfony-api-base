@@ -15,7 +15,7 @@ Antes de comenzar, asegúrate de tener instalado en tu máquina:
 
 ## Levantando el Entorno (Totalmente Automatizado)
 
-El entorno de desarrollo está configurado para inicializarse por completo con un único comando. Al levantar los contenedores, Docker ejecutará un script que instala dependencias, genera llaves de seguridad, corre migraciones y carga usuarios de prueba.
+El entorno de desarrollo está configurado para inicializarse por completo con un único comando. Al levantar los contenedores, Docker ejecutará un script que instala dependencias, genera llaves de seguridad, corre migraciones, instala la infraestructura de auditoría y carga usuarios de prueba.
 
 1.  **Clona el repositorio** (si aún no lo has hecho) e ingresa a la carpeta:
     ```bash
@@ -30,6 +30,7 @@ El entorno de desarrollo está configurado para inicializarse por completo con u
     *   Generar las llaves JWT (`private.pem` y `public.pem`) si no existen.
     *   Esperar a que PostgreSQL esté listo para recibir conexiones.
     *   Ejecutar las migraciones pendientes de base de datos.
+    *   Crear o actualizar el esquema y las funciones base de auditoría.
     *   Cargar los usuarios de prueba base (Fixtures) solo si la base de datos está vacía.
 
 Una vez finalizado, puedes acceder a la documentación interactiva de la API (Swagger UI) en:
@@ -107,6 +108,10 @@ Todos los comandos deben ejecutarse en la terminal desde la raíz del proyecto:
 *   **Correr migraciones manualmente:**
     ```bash
     docker compose exec api php bin/console doctrine:migrations:migrate --no-interaction
+    ```
+*   **Instalar o reparar la infraestructura de auditoría manualmente:**
+    ```bash
+    docker compose exec api php bin/console app:auditoria:instalar --no-interaction
     ```
 *   **Forzar la recarga de fixtures (Borra datos y vuelve a insertar los de prueba):**
     ```bash

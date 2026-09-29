@@ -39,7 +39,11 @@ exit(1);
 echo "Ejecutando migraciones de base de datos..."
 php bin/console doctrine:migrations:migrate --no-interaction
 
-# 5. Cargar fixtures solo si la tabla de usuarios está vacía
+# 5. Instalar o actualizar la infraestructura compartida de auditoría
+echo "Instalando infraestructura de auditoría..."
+php bin/console app:auditoria:instalar --no-interaction
+
+# 6. Cargar fixtures solo si la tabla de usuarios está vacía
 echo "Verificando si la base de datos tiene datos..."
 USER_COUNT=$(php -r '
 try {

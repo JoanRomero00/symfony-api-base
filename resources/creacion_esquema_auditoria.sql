@@ -3,8 +3,10 @@
 -- de auditoría del proyecto antes de ejecutar.
 -- Ejemplo: sed -i 's/%%AUDIT_SCHEMA%%/mi_proyecto_audit/g' creacion_esquema_auditoria.sql
 -- =============================================================
--- CREA ESQUEMA DE %%AUDIT_SCHEMA%%
-CREATE SCHEMA %%AUDIT_SCHEMA%% AUTHORIZATION postgres;
+-- CREA ESQUEMA DE %%AUDIT_SCHEMA%%.
+-- IF NOT EXISTS permite ejecutar el instalador en cada arranque sin
+-- modificar las tablas de auditoría que ya existan.
+CREATE SCHEMA IF NOT EXISTS %%AUDIT_SCHEMA%% AUTHORIZATION CURRENT_USER;
 
 ---------------------------------------------------------------------
 -- Crea la función que se ocupará de crear el código personalizado 
@@ -76,7 +78,7 @@ END
 $BODY$;
 
 ALTER FUNCTION %%AUDIT_SCHEMA%%.acp_audit_create_function(name)
-    OWNER TO postgres;
+    OWNER TO CURRENT_USER;
 
 ---------------------------------------------------------------------
 -- La función %%AUDIT_SCHEMA%%.acp_audit_table(name) permite activar la 
@@ -138,7 +140,7 @@ END
 $BODY$;
 
 ALTER FUNCTION %%AUDIT_SCHEMA%%.acp_audit_table(name)
-    OWNER TO postgres;
+    OWNER TO CURRENT_USER;
 	
 
 ---------------------------------------------------------------------
@@ -175,4 +177,4 @@ END
 $BODY$;
 
 ALTER FUNCTION %%AUDIT_SCHEMA%%.acp_audit_userid_delete(tablename character varying, id_entity integer, id_user_app integer)
-    OWNER TO postgres;
+    OWNER TO CURRENT_USER;
